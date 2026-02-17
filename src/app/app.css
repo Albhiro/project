@@ -6,7 +6,7 @@ main {
   min-height: calc(100vh - 160px); /* header + footer */
 }
 
-/* Modo lector: pantalla completa sin padding */
+/* Modo lector: pantalla completa sin padding */ 
 main.lector-mode {
   min-height: 100vh;
 }
