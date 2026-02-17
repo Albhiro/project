@@ -1,0 +1,389 @@
+<section class="personajes-page">
+  <div class="container">
+    <!-- Hero Section -->
+    <div class="personajes-hero">
+      <h1 class="personajes-title">{{ 'characters.title' | translate }}</h1>
+      <p class="personajes-subtitle">
+        {{ 'characters.intro' | translate }}
+        <strong>{{ 'characters.intro_bold' | translate }}</strong>
+      </p>
+    </div>
+
+    <!-- Progress Bar -->
+    <div class="progress-personajes">
+      <div class="progress-bar-personajes">
+        <div class="progress-fill" [style.width.%]="progressService.getProgresoTotal()"></div>
+      </div>
+      <div class="progress-info">
+        <p class="progress-text">
+          @if (progressService.getCapituloActual() === 0) {
+            <strong>{{ 'characters.pre_launch' | translate }}</strong> · {{ 'characters.pre_launch_desc' | translate }}
+          } @else {
+            <strong>{{ 'characters.current_chapter' | translate: {number: progressService.getCapituloActual()} }}</strong> · {{ 'characters.unlocked_count' | translate: {count: personajes.length} }}
+          }
+        </p>
+        @if (progressService.getCapituloActual() === 0) {
+          <p class="aviso-spoilers">
+            {{ 'characters.locked_notice' | translate }}
+          </p>
+        }
+      </div>
+    </div>
+
+    <!-- Métricas Explicación -->
+    <div class="metricas-explicacion glass-effect">
+      <h3>{{ 'characters.metrics_title' | translate }}</h3>
+      <div class="metricas-grid">
+        <div class="metrica-item">
+          <span class="metrica-icon">👁️</span>
+          <strong>{{ 'characters.views' | translate }}</strong> {{ 'characters.views_desc' | translate }}
+        </div>
+        <div class="metrica-item">
+          <span class="metrica-icon">❤️</span>
+          <strong>{{ 'characters.likes' | translate }}</strong> {{ 'characters.likes_desc' | translate }}
+        </div>
+        <div class="metrica-item">
+          <span class="metrica-icon">🔄</span>
+          <strong>{{ 'characters.shares' | translate }}</strong> {{ 'characters.shares_desc' | translate }}
+        </div>
+        <div class="metrica-item">
+          <span class="metrica-icon">💬</span>
+          <strong>{{ 'characters.comments' | translate }}</strong> {{ 'characters.comments_desc' | translate }}
+        </div>
+      </div>
+    </div>
+
+    <!-- Loading/Error States -->
+    @if (loading) {
+      <div class="loading-state">
+        <div class="loading-spinner"></div>
+        <p>{{ 'characters.loading' | translate }}</p>
+      </div>
+    } @else if (error) {
+      <div class="error-state">
+        <span class="error-icon">⚠️</span>
+        <p class="error-text">{{ 'characters.error' | translate }}</p>
+      </div>
+    } @else {
+      <!-- Tabs Container -->
+      <div class="tabs-container">
+        <!-- Main Tabs -->
+        <nav class="tabs-nav">
+          <button
+            class="tab-button"
+            [class.active]="activeTab === 'todos'"
+            (click)="setActiveTab('todos')">
+            <span class="tab-icon">👥</span>
+            <span class="tab-label">{{ 'characters.all' | translate }}</span>
+            <span class="tab-count">{{personajes.length}}</span>
+          </button>
+          <button
+            class="tab-button"
+            [class.active]="activeTab === 'protagonistas'"
+            (click)="setActiveTab('protagonistas')">
+            <span class="tab-icon">⭐</span>
+            <span class="tab-label">{{ 'characters.protagonists' | translate }}</span>
+            <span class="tab-count">{{getConteoPorTipo('protagonista')}}</span>
+          </button>
+          <button
+            class="tab-button"
+            [class.active]="activeTab === 'antagonistas'"
+            (click)="setActiveTab('antagonistas')">
+            <span class="tab-icon">💀</span>
+            <span class="tab-label">{{ 'characters.antagonists' | translate }}</span>
+            <span class="tab-count">{{getConteoPorTipo('antagonista')}}</span>
+          </button>
+          <button
+            class="tab-button"
+            [class.active]="activeTab === 'aliados'"
+            (click)="setActiveTab('aliados')">
+            <span class="tab-icon">🤝</span>
+            <span class="tab-label">{{ 'characters.allies' | translate }}</span>
+            <span class="tab-count">{{getConteoPorTipo('aliado')}}</span>
+          </button>
+          <button
+            class="tab-button"
+            [class.active]="activeTab === 'secundarios'"
+            (click)="setActiveTab('secundarios')">
+            <span class="tab-icon">👤</span>
+            <span class="tab-label">{{ 'characters.secondary' | translate }}</span>
+            <span class="tab-count">{{getConteoPorTipo('secundario')}}</span>
+          </button>
+        </nav>
+
+        <!-- Filtros por Tier -->
+        @if (getTiersDisponibles().length > 1) {
+          <div class="filtros-container">
+            <button
+              class="filtro-btn"
+              [class.active]="filtroTier === 'todos'"
+              (click)="setFiltroTier('todos')">
+              {{ 'characters.all_tiers' | translate }}
+            </button>
+            @for (tier of getTiersDisponibles(); track tier) {
+              <button
+                class="filtro-btn"
+                [class.active]="filtroTier === tier"
+                (click)="setFiltroTier(tier)">
+                {{ 'characters.tier' | translate: {tier: tier} }}
+              </button>
+            }
+          </div>
+        }
+
+        <!-- Grid de Personajes -->
+        @if (personajesFiltrados.length > 0) {
+          <div class="personajes-grid">
+            @for (personaje of personajesFiltrados; track personaje.id) {
+              <article class="personaje-card glass-effect" [class]="'tipo-' + personaje.tipo">
+                <!-- Header -->
+                <div class="card-header">
+                  <span class="personaje-icon-xl">{{personaje.icono || '[:)]'}}</span>
+                  <div class="card-header-text">
+                    <h3 class="card-title">{{personaje.nombre}}</h3>
+                    <span class="tipo-badge">{{traducirTipoPersonaje(personaje.tipo)}}</span>
+                    <span class="tier-badge" [class]="'tier-' + personaje.tier_actual.toLowerCase()">
+                      {{ 'characters.tier' | translate: {tier: personaje.tier_actual} }}
+                    </span>
+                  </div>
+                </div>
+
+                <!-- Alias -->
+                @if (personaje.alias) {
+                  <p class="personaje-alias">{{personaje.alias}}</p>
+                }
+
+                <!-- Stats Grid -->
+                <div class="stats-grid">
+                  <div class="stat-item">
+                    <span class="stat-icon">👁️</span>
+                    <div class="stat-info">
+                      <span class="stat-label">{{ 'characters.views' | translate }}</span>
+                      <span class="stat-value">{{formatViews(personaje.views)}}</span>
+                    </div>
+                  </div>
+                  @if (personaje.likes) {
+                    <div class="stat-item">
+                      <span class="stat-icon">❤️</span>
+                      <div class="stat-info">
+                        <span class="stat-label">{{ 'characters.likes' | translate }}</span>
+                        <span class="stat-value">{{formatViews(personaje.likes)}}</span>
+                      </div>
+                    </div>
+                  }
+                  @if (personaje.shares) {
+                    <div class="stat-item">
+                      <span class="stat-icon">🔄</span>
+                      <div class="stat-info">
+                        <span class="stat-label">{{ 'characters.shares' | translate }}</span>
+                        <span class="stat-value">{{formatViews(personaje.shares)}}</span>
+                      </div>
+                    </div>
+                  }
+                </div>
+
+                <!-- Descripción Corta -->
+                @if (personaje.biografia) {
+                  <p class="card-descripcion">{{personaje.biografia}}</p>
+                }
+
+                <!-- Botón Ver Más -->
+                <button class="btn-ver-mas" (click)="abrirModal(personaje)">
+                  <span class="btn-icon">🔍</span>
+                  {{ 'characters.see_profile' | translate }}
+                </button>
+              </article>
+            }
+          </div>
+        } @else {
+          <div class="empty-state glass-effect">
+            <span class="empty-icon">👤</span>
+            <h3 class="empty-title">{{ 'characters.no_characters' | translate }}</h3>
+            <p class="empty-text">{{ 'characters.try_filter' | translate }}</p>
+          </div>
+        }
+      </div>
+    }
+  </div>
+</section>
+
+<!-- Modal de Detalles de Personaje -->
+@if (modalAbierto && personajeSeleccionado) {
+  <div class="modal-overlay" (click)="cerrarModal()">
+    <div class="modal-container glass-effect" (click)="$event.stopPropagation()">
+      <!-- Header del Modal -->
+      <div class="modal-header">
+        <div class="modal-title-section">
+          <span class="modal-icon">{{personajeSeleccionado.icono || '[:)]'}}</span>
+          <div>
+            <h2 class="modal-title">{{personajeSeleccionado.nombre}}</h2>
+            @if (personajeSeleccionado.alias) {
+              <p class="modal-subtitle">{{personajeSeleccionado.alias}}</p>
+            }
+          </div>
+        </div>
+        <button class="modal-close" (click)="cerrarModal()">{{ 'characters.modal_close' | translate }}</button>
+      </div>
+
+      <!-- Contenido del Modal -->
+      <div class="modal-body">
+        <!-- Métricas Completas -->
+        <div class="modal-section">
+          <h3 class="modal-section-title">
+            <span class="section-icon">📊</span>
+            {{ 'characters.modal_metrics' | translate }}
+          </h3>
+          <div class="modal-stats-grid">
+            <div class="modal-stat-item">
+              <span class="modal-stat-icon">👁️</span>
+              <div>
+                <span class="modal-stat-label">{{ 'characters.views' | translate }}</span>
+                <span class="modal-stat-value">{{formatViews(personajeSeleccionado.views)}}</span>
+              </div>
+            </div>
+            @if (personajeSeleccionado.likes) {
+              <div class="modal-stat-item">
+                <span class="modal-stat-icon">❤️</span>
+                <div>
+                  <span class="modal-stat-label">{{ 'characters.likes' | translate }}</span>
+                  <span class="modal-stat-value">{{formatViews(personajeSeleccionado.likes)}}</span>
+                </div>
+              </div>
+            }
+            @if (personajeSeleccionado.shares) {
+              <div class="modal-stat-item">
+                <span class="modal-stat-icon">🔄</span>
+                <div>
+                  <span class="modal-stat-label">{{ 'characters.shares' | translate }}</span>
+                  <span class="modal-stat-value">{{formatViews(personajeSeleccionado.shares)}}</span>
+                </div>
+              </div>
+            }
+            @if (personajeSeleccionado.comments) {
+              <div class="modal-stat-item">
+                <span class="modal-stat-icon">💬</span>
+                <div>
+                  <span class="modal-stat-label">{{ 'characters.comments' | translate }}</span>
+                  <span class="modal-stat-value">{{formatViews(personajeSeleccionado.comments)}}</span>
+                </div>
+              </div>
+            }
+          </div>
+        </div>
+
+        <!-- Historia -->
+        @if (personajeSeleccionado.historia_completa) {
+          <div class="modal-section">
+            <h3 class="modal-section-title">
+              <span class="section-icon">📖</span>
+              {{ 'characters.modal_history' | translate }}
+            </h3>
+            <p class="modal-text">{{personajeSeleccionado.historia_completa}}</p>
+          </div>
+        }
+
+        <!-- Personalidad -->
+        @if (personajeSeleccionado.personalidad) {
+          <div class="modal-section">
+            <h3 class="modal-section-title">
+              <span class="section-icon">🧠</span>
+              {{ 'characters.modal_personality' | translate }}
+            </h3>
+            <p class="modal-text">{{personajeSeleccionado.personalidad}}</p>
+          </div>
+        }
+
+        <!-- Apariencia -->
+        <div class="modal-section">
+          <h3 class="modal-section-title">
+            <span class="section-icon">👤</span>
+            {{ 'characters.modal_appearance' | translate }}
+          </h3>
+          <div class="apariencia-grid">
+            @if (personajeSeleccionado.apariencia_low_res) {
+              <div class="apariencia-item low-res">
+                <h4>{{ 'characters.modal_low_res' | translate }}</h4>
+                <p>{{personajeSeleccionado.apariencia_low_res}}</p>
+              </div>
+            }
+            @if (personajeSeleccionado.apariencia_high_res) {
+              <div class="apariencia-item high-res">
+                <h4>{{ 'characters.modal_high_res' | translate }}</h4>
+                <p>{{personajeSeleccionado.apariencia_high_res}}</p>
+              </div>
+            }
+          </div>
+        </div>
+
+        <!-- Poder Único -->
+        @if (personajeSeleccionado.poder_unico) {
+          <div class="modal-section">
+            <h3 class="modal-section-title">
+              <span class="section-icon">⚡</span>
+              {{ 'characters.modal_power' | translate }}
+            </h3>
+            <div class="poder-box">
+              <h4>{{personajeSeleccionado.poder_unico}}</h4>
+              @if (personajeSeleccionado.poder_descripcion) {
+                <p>{{personajeSeleccionado.poder_descripcion}}</p>
+              }
+            </div>
+          </div>
+        }
+
+        <!-- Habilidades -->
+        @if (personajeSeleccionado.habilidades && personajeSeleccionado.habilidades.length > 0) {
+          <div class="modal-section">
+            <h3 class="modal-section-title">
+              <span class="section-icon">🎯</span>
+              {{ 'characters.modal_abilities' | translate }}
+            </h3>
+            <div class="habilidades-list">
+              @for (habilidad of personajeSeleccionado.habilidades; track habilidad.id) {
+                <div class="habilidad-item">
+                  <h4>{{habilidad.nombre}}</h4>
+                  <p class="habilidad-tipo">{{habilidad.tipo}} · {{ 'characters.tier' | translate: {tier: habilidad.tier} }}</p>
+                  <p class="habilidad-desc">{{ 'characters.modal_mastery' | translate }} {{habilidad.dominio}} · {{ 'characters.modal_unlock' | translate }} {{ 'characters.modal_level' | translate }} {{habilidad.nivel_desbloqueo}}</p>
+                </div>
+              }
+            </div>
+          </div>
+        }
+
+        <!-- Info Adicional -->
+        <div class="modal-info-grid">
+          @if (personajeSeleccionado.edad) {
+            <div class="modal-info-item">
+              <span class="modal-info-icon">🎂</span>
+              <div>
+                <span class="modal-info-label">{{ 'characters.modal_age' | translate }}</span>
+                <span class="modal-info-value">{{personajeSeleccionado.edad}} {{ 'characters.modal_age_years' | translate }}</span>
+              </div>
+            </div>
+          }
+          @if (personajeSeleccionado.genero) {
+            <div class="modal-info-item">
+              <span class="modal-info-icon">🚻</span>
+              <div>
+                <span class="modal-info-label">{{ 'characters.modal_gender' | translate }}</span>
+                <span class="modal-info-value">{{personajeSeleccionado.genero}}</span>
+              </div>
+            </div>
+          }
+          @if (personajeSeleccionado.tier_actual) {
+            <div class="modal-info-item">
+              <span class="modal-info-icon">⚔️</span>
+              <div>
+                <span class="modal-info-label">{{ 'characters.modal_current_tier' | translate }}</span>
+                <span class="modal-info-value">{{personajeSeleccionado.tier_actual}}</span>
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+}
+
+<!-- Scroll to Top Button -->
+<app-scroll-to-top />

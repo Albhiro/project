@@ -1,0 +1,49 @@
+<section class="sobre-page">
+  <div class="container">
+    <h1>{{ 'about.title' | translate }}</h1>
+    <p class="lead">{{ 'about.lead' | translate }}</p>
+
+    <!-- DOCUMENTOS LEGALES E INSTITUCIONALES -->
+    <article class="sobre-section documentos-legales">
+      <h2>{{ 'about.legal_docs.title' | translate }}</h2>
+      <p class="docs-intro">
+        {{ 'about.legal_docs.intro' | translate }}
+      </p>
+
+      <div class="docs-grid">
+        <a routerLink="/sobre/manifiesto" class="doc-card doc-mundo">
+          <div class="doc-icon">📜</div>
+          <h3>{{ 'about.legal_docs.manifesto.title' | translate }}</h3>
+          <p>{{ 'about.legal_docs.manifesto.desc' | translate }}</p>
+          <div class="doc-tag tag-mundo">{{ 'about.legal_docs.manifesto.tag' | translate }}</div>
+        </a>
+
+        <a routerLink="/sobre/licencia" class="doc-card doc-legal">
+          <div class="doc-icon">⚖️</div>
+          <h3>{{ 'about.legal_docs.license.title' | translate }}</h3>
+          <p>{{ 'about.legal_docs.license.desc' | translate }}</p>
+          <div class="doc-tag tag-legal">{{ 'about.legal_docs.license.tag' | translate }}</div>
+        </a>
+
+        <a routerLink="/sobre/privacidad" class="doc-card doc-privacy">
+          <div class="doc-icon">🔒</div>
+          <h3>{{ 'about.legal_docs.privacy.title' | translate }}</h3>
+          <p>{{ 'about.legal_docs.privacy.desc' | translate }}</p>
+          <div class="doc-tag tag-privacy">{{ 'about.legal_docs.privacy.tag' | translate }}</div>
+        </a>
+
+        <a routerLink="/sobre/terminos" class="doc-card doc-terminos">
+          <div class="doc-icon">📋</div>
+          <h3>{{ 'about.legal_docs.terms.title' | translate }}</h3>
+          <p>{{ 'about.legal_docs.terms.desc' | translate }}</p>
+          <div class="doc-tag tag-terminos">{{ 'about.legal_docs.terms.tag' | translate }}</div>
+        </a>
+      </div>
+    </article>
+
+    <!-- MAPA DE ANALYTICS GLOBAL -->
+    <article class="sobre-section analytics-section">
+      <app-analytics-map></app-analytics-map>
+    </article>
+<!-- Scroll to Top Button -->
+<app-scroll-to-top />

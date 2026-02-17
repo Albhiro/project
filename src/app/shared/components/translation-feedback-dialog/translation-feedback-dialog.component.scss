@@ -1,0 +1,363 @@
+/* ========================================
+   OVERLAY DEL MODAL
+   ======================================== */
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(5px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  padding: 1rem;
+  overflow-y: auto;
+}
+
+/* ========================================
+   MODAL PRINCIPAL
+   ======================================== */
+
+.translation-feedback-dialog {
+  width: 600px;
+  max-width: 90vw;
+  max-height: 90vh;
+  overflow-y: auto;
+  font-family: 'Courier New', monospace;
+  background: #0a0a0a;
+  border: 3px solid #00ff00;
+  border-radius: 8px;
+  box-shadow: 
+    0 10px 40px rgba(0, 0, 0, 0.7),
+    0 0 30px rgba(0, 255, 0, 0.3);
+}
+
+/* ========================================
+   HEADER
+   ======================================== */
+
+.dialog-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem;
+  border-bottom: 2px solid #00ff00;
+  background: linear-gradient(135deg, #000 0%, #1a1a1a 100%);
+}
+
+.dialog-header h2 {
+  margin: 0;
+  font-size: 1.5rem;
+  color: #00ff00;
+  text-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+}
+
+.btn-close {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: #ff0066;
+  cursor: pointer;
+  padding: 0.5rem;
+  transition: transform 0.2s ease;
+}
+
+.btn-close:hover {
+  transform: scale(1.2);
+}
+
+.btn-close:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ========================================
+   BODY
+   ======================================== */
+
+.dialog-body {
+  padding: 1.5rem;
+  background: #0a0a0a;
+  color: #e0e0e0;
+}
+
+.context-info {
+  background: #1a1a1a;
+  border-left: 4px solid #00ff00;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.context-info p {
+  margin: 0.5rem 0;
+  font-size: 0.9rem;
+}
+
+.context-info strong {
+  color: #00ff00;
+}
+
+/* ========================================
+   TEXTO SELECCIONADO
+   ======================================== */
+
+.selected-text {
+  margin-bottom: 1.5rem;
+}
+
+.selected-text label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: #00ccff;
+  font-weight: bold;
+}
+
+.selected-text blockquote {
+  background: #1a1a1a;
+  border-left: 4px solid #00ccff;
+  padding: 1rem;
+  margin: 0;
+  font-style: italic;
+  color: #cccccc;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+/* ========================================
+   FORMULARIO
+   ======================================== */
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: #e0e0e0;
+  font-weight: bold;
+}
+
+.required {
+  color: #ff0066;
+}
+
+textarea,
+input[type="text"],
+input[type="email"] {
+  width: 100%;
+  padding: 0.75rem;
+  background: #1a1a1a;
+  border: 2px solid #333;
+  border-radius: 4px;
+  color: #e0e0e0;
+  font-family: 'Courier New', monospace;
+  font-size: 0.95rem;
+  transition: border-color 0.3s ease;
+}
+
+textarea:focus,
+input:focus {
+  outline: none;
+  border-color: #00ff00;
+  box-shadow: 0 0 10px rgba(0, 255, 0, 0.3);
+}
+
+textarea.error,
+input.error {
+  border-color: #ff0066;
+}
+
+.hint {
+  display: block;
+  margin-top: 0.25rem;
+  font-size: 0.8rem;
+  color: #888;
+}
+
+.error-message {
+  display: block;
+  margin-top: 0.25rem;
+  font-size: 0.8rem;
+  color: #ff0066;
+}
+
+/* ========================================
+   CONTACTO
+   ======================================== */
+
+.contact-group {
+  background: #1a1a1a;
+  border: 2px solid #333;
+  border-radius: 4px;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.contact-header {
+  margin: 0 0 0.5rem 0;
+  color: #00ccff;
+  font-weight: bold;
+}
+
+.contact-hint {
+  display: block;
+  font-size: 0.85rem;
+  color: #aaa;
+  margin-bottom: 1rem;
+}
+
+.contact-inputs {
+  display: flex;
+  gap: 1rem;
+}
+
+.contact-inputs .form-group {
+  flex: 1;
+  margin-bottom: 0;
+}
+
+/* ========================================
+   ALERTAS
+   ======================================== */
+
+.alert {
+  padding: 1rem;
+  border-radius: 4px;
+  margin-bottom: 1rem;
+}
+
+.alert-error {
+  background: rgba(255, 0, 102, 0.2);
+  border: 2px solid #ff0066;
+  color: #ff0066;
+}
+
+/* ========================================
+   ACCIONES
+   ======================================== */
+
+.dialog-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 2px solid #333;
+}
+
+.btn {
+  padding: 0.75rem 1.5rem;
+  border: 2px solid;
+  border-radius: 4px;
+  font-family: 'Courier New', monospace;
+  font-size: 0.95rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+}
+
+.btn-primary {
+  background: #00ff00;
+  border-color: #00ff00;
+  color: #000;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: #00cc00;
+  box-shadow: 0 0 20px rgba(0, 255, 0, 0.5);
+  transform: translateY(-2px);
+}
+
+.btn-primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-secondary {
+  background: transparent;
+  border-color: #666;
+  color: #e0e0e0;
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background: #333;
+  border-color: #999;
+}
+
+/* ========================================
+   ESTADO SUCCESS
+   ======================================== */
+
+.dialog-success {
+  padding: 3rem 2rem;
+  text-align: center;
+  background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+}
+
+.success-icon {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+  animation: bounce 0.6s ease;
+}
+
+@keyframes bounce {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.2); }
+}
+
+.dialog-success h2 {
+  color: #00ff00;
+  margin: 1rem 0;
+  text-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+}
+
+.dialog-success p {
+  color: #e0e0e0;
+  margin: 1rem 0 2rem;
+  line-height: 1.6;
+}
+
+.auto-close {
+  display: block;
+  margin-top: 1.5rem;
+  color: #888;
+  font-size: 0.85rem;
+  font-style: italic;
+}
+
+/* ========================================
+   RESPONSIVE
+   ======================================== */
+
+@media (max-width: 768px) {
+  .translation-feedback-dialog {
+    width: 100%;
+    max-width: 100%;
+    height: 100vh;
+    max-height: 100vh;
+    border-radius: 0;
+  }
+
+  .contact-inputs {
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .contact-inputs .form-group {
+    margin-bottom: 1rem;
+  }
+
+  .dialog-actions {
+    flex-direction: column-reverse;
+  }
+
+  .btn {
+    width: 100%;
+  }
+}

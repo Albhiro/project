@@ -1,0 +1,87 @@
+<!-- TRENDING GHOST - Brutalismo Digital -->
+
+<header class="site-header" [class.scrolled]="headerScrolled" [class.logo-hidden]="heroLogoVisible" *ngIf="!isLectorMode">
+  <div class="container">
+    <a routerLink="/" class="logo" [class.fade-out]="heroLogoVisible">
+      <span class="icon">[:)]</span>
+      <div class="logo-text">
+        <h1>{{ 'common.site_name' | translate }}</h1>
+        <span class="subtitle">{{ 'common.site_name_japanese' | translate }}</span>
+      </div>
+    </a>
+
+    <!-- Mobile menu toggle -->
+    <button class="mobile-menu-toggle"
+            [class.active]="mobileMenuOpen"
+            (click)="toggleMobileMenu()"
+            [attr.aria-label]="'nav.toggle_menu' | translate">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+
+    <nav [class.mobile-open]="mobileMenuOpen">
+      <a routerLink="/capitulos" routerLinkActive="active" (click)="closeMobileMenu()">{{ 'nav.chapters' | translate }}</a>
+      <a routerLink="/mundo" routerLinkActive="active" (click)="closeMobileMenu()">{{ 'nav.world' | translate }}</a>
+      <a routerLink="/personajes" routerLinkActive="active" (click)="closeMobileMenu()">{{ 'nav.characters' | translate }}</a>
+      <a routerLink="/bestiario" routerLinkActive="active" (click)="closeMobileMenu()">{{ 'nav.bestiary' | translate }}</a>
+      <a routerLink="/sobre" routerLinkActive="active" (click)="closeMobileMenu()">{{ 'nav.about' | translate }}</a>
+      <app-language-selector></app-language-selector>
+    </nav>
+  </div>
+</header>
+
+<main [class.lector-mode]="isLectorMode">
+  <router-outlet />
+</main>
+
+<footer class="site-footer" *ngIf="!isLectorMode">
+  <div class="container">
+    <div class="footer-main">
+      <div class="footer-section">
+        <h3>{{ 'common.site_name' | translate }}</h3>
+        <p class="footer-tagline">{{ 'footer.tagline' | translate }}</p>
+        <p class="copyright">{{ 'footer.copyright' | translate }}</p>
+      </div>
+
+      <div class="footer-section">
+        <h4>{{ 'footer.legal.title' | translate }}</h4>
+        <ul class="footer-links-list">
+          <li><a href="/LICENSE.md" download>📜 {{ 'footer.legal.copyright_license' | translate }}</a></li>
+          <li><a href="/AUTORIA.md" download>✍️ {{ 'footer.legal.authorship' | translate }}</a></li>
+          <li><a href="https://www.safecreative.org" target="_blank" rel="noopener">🛡️ {{ 'footer.legal.safe_creative' | translate }}</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-section">
+        <h4>{{ 'footer.transparency.title' | translate }}</h4>
+        <ul class="footer-links-list">
+          <li><a href="https://github.com/tu-usuario/TRENDING-GHOST" target="_blank" rel="noopener">
+            <span class="github-icon">⚙️</span> {{ 'footer.transparency.view_source' | translate }}
+          </a></li>
+          <li><a routerLink="/commits">📋 {{ 'footer.transparency.commit_history' | translate }}</a></li>
+          <li><span class="git-timestamp">{{ 'footer.transparency.git_proof' | translate }}</span></li>
+        </ul>
+      </div>
+
+      <div class="footer-section">
+        <h4>{{ 'footer.community.title' | translate }}</h4>
+        <ul class="footer-links-list">
+          <li><a href="/feed.xml" target="_blank">📡 {{ 'footer.community.rss_feed' | translate }}</a></li>
+          <li><a href="https://ko-fi.com/trendingghost" target="_blank" rel="noopener">☕ {{ 'footer.community.kofi' | translate }}</a></li>
+          <li><a routerLink="/contacto">💬 {{ 'footer.community.contact' | translate }}</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p class="footer-quote">"{{ 'footer.quote' | translate }}"</p>
+      <p class="footer-legal-notice">
+        ⚖️ {{ 'footer.legal_notice' | translate }}
+        <br>
+        {{ 'footer.legal_notice_extended' | translate }}
+      </p>
+    </div>
+  </div>
+</footer>
+

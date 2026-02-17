@@ -1,0 +1,175 @@
+<section class="commits-history-page">
+  <div class="container">
+    <!-- Header -->
+    <div class="page-header">
+      <h1>
+        <span class="icon">📝</span>
+        {{ 'commits.title' | translate }}
+      </h1>
+      <p class="subtitle">
+        {{ 'commits.subtitle' | translate }}
+      </p>
+    </div>
+
+    <!-- Repository Selector -->
+    <div class="repo-selector">
+      <div class="repo-tabs">
+        @for (repo of repos; track repo) {
+          <button 
+            class="repo-tab"
+            [class.active]="selectedRepo === repo"
+            (click)="selectRepo(repo)"
+            [disabled]="loading">
+            <span class="repo-name">{{ commitsService.repoDisplayNames[repo] }}</span>
+          </button>
+        }
+      </div>
+      
+      <button class="reload-btn" (click)="reload()" [disabled]="loading">
+        <span class="icon">🔄</span>
+        {{ 'commits.reload' | translate }}
+      </button>
+    </div>
+
+    <!-- Loading State -->
+    @if (loading) {
+      <div class="loading-state">
+        <div class="spinner"></div>
+        <p>{{ 'commits.loading' | translate }}</p>
+      </div>
+    }
+
+    <!-- Error State -->
+    @if (error && !loading) {
+      <div class="error-state">
+        <span class="error-icon">⚠️</span>
+        <h3>{{ 'commits.error' | translate }}</h3>
+        <p>{{ errorMessage }}</p>
+        <button class="retry-btn" (click)="reload()">
+          {{ 'commits.retry' | translate }}
+        </button>
+      </div>
+    }
+
+    <!-- Commits List -->
+    @if (!loading && !error && commits.length > 0) {
+      <div class="commits-timeline">
+        @for (commit of commits; track commit.sha_full) {
+          <div class="commit-card" [attr.data-type]="getCommitType(commit.message).type.toLowerCase()">
+            <!-- Commit Header -->
+            <div class="commit-header">
+              <div class="commit-type-badge" [attr.data-color]="getCommitType(commit.message).color">
+                <span class="badge-icon">{{ getCommitType(commit.message).icon }}</span>
+                <span class="badge-text">{{ getCommitType(commit.message).type }}</span>
+              </div>
+              
+              <div class="commit-meta">
+                <button 
+                  class="commit-sha" 
+                  (click)="copySHA(commit.sha_full, $event)"
+                  [title]="'commits.copy_sha' | translate">
+                  <span class="sha-icon">🔗</span>
+                  <code>{{ commit.sha }}</code>
+                </button>
+                <span class="commit-time">{{ getRelativeTime(commit.author.date) }}</span>
+              </div>
+            </div>
+
+            <!-- Commit Message -->
+            <div class="commit-content">
+              <h3 class="commit-title">{{ getCommitTitle(commit) }}</h3>
+              @if (getCommitBody(commit)) {
+                <p class="commit-body">{{ getCommitBody(commit) }}</p>
+              }
+            </div>
+
+            <!-- Commit Author -->
+            <div class="commit-author">
+              @if (commit.author.avatar_url) {
+                <img 
+                  [src]="commit.author.avatar_url" 
+                  [alt]="commit.author.name"
+                  class="author-avatar">
+              } @else {
+                <div class="author-avatar-placeholder">
+                  {{ commit.author.name.charAt(0).toUpperCase() }}
+                </div>
+              }
+              <div class="author-info">
+                <span class="author-name">{{ commit.author.name }}</span>
+                <span class="author-email">{{ commit.author.email }}</span>
+              </div>
+            </div>
+
+            <!-- Commit Stats -->
+            @if (commit.stats.total > 0) {
+              <div class="commit-stats">
+                <span class="stat additions" [title]="'commits.additions' | translate">
+                  <span class="stat-icon">+</span>
+                  {{ commit.stats.additions }}
+                </span>
+                <span class="stat deletions" [title]="'commits.deletions' | translate">
+                  <span class="stat-icon">-</span>
+                  {{ commit.stats.deletions }}
+                </span>
+                <span class="stat total">
+                  {{ commit.stats.total }} {{ 'commits.changes' | translate }}
+                </span>
+              </div>
+            }
+
+            <!-- View on GitHub -->
+            <a 
+              [href]="commit.url" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              class="view-on-github">
+              <span class="github-icon">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                  <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/>
+                </svg>
+              </span>
+              {{ 'commits.view_on_github' | translate }}
+            </a>
+          </div>
+        }
+      </div>
+
+      <!-- Load More Button -->
+      @if (hasMore) {
+        <div class="load-more-container">
+          <button 
+            class="load-more-btn" 
+            (click)="loadMore()" 
+            [disabled]="loadingMore">
+            @if (loadingMore) {
+              <span class="spinner-small"></span>
+              {{ 'commits.loading_more' | translate }}
+            } @else {
+              {{ 'commits.load_more' | translate }}
+            }
+          </button>
+        </div>
+      }
+
+      <!-- End Message -->
+      @if (!hasMore && commits.length > 0) {
+        <div class="end-message">
+          <span class="icon">🎉</span>
+          {{ 'commits.end_of_history' | translate }}
+        </div>
+      }
+    }
+
+    <!-- Empty State -->
+    @if (!loading && !error && commits.length === 0) {
+      <div class="empty-state">
+        <span class="empty-icon">📭</span>
+        <h3>{{ 'commits.no_commits' | translate }}</h3>
+        <p>{{ 'commits.no_commits_desc' | translate }}</p>
+      </div>
+    }
+  </div>
+
+  <app-scroll-to-top />
+</section>

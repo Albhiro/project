@@ -1,0 +1,586 @@
+/* ============================================
+   COMMITS PAGE
+   ============================================ */
+.commits-page {
+  min-height: 100vh;
+  padding: 2rem 0 4rem;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+/* ============================================
+   HEADER
+   ============================================ */
+.commits-header {
+  text-align: center;
+  margin-bottom: 3rem;
+  padding: 3rem 2rem;
+  background: linear-gradient(135deg, rgba(0, 255, 255, 0.1), rgba(255, 0, 255, 0.1));
+  border-radius: 16px;
+  border: 1px solid rgba(0, 255, 255, 0.2);
+}
+
+.commits-header h1 {
+  font-size: clamp(2rem, 5vw, 3rem);
+  font-weight: 900;
+  background: linear-gradient(135deg, var(--cyan), var(--magenta));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 1rem;
+}
+
+.commits-subtitle {
+  color: var(--text-muted);
+  font-size: 1.125rem;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+/* ============================================
+   SELECTOR DE REPOSITORIOS
+   ============================================ */
+/* ============================================
+   TABS NAVEGACIÓN (estilo protagonistas)
+   ============================================ */
+.tabs-navigation {
+  display: flex;
+  gap: 0;
+  margin-bottom: 2rem;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+  overflow-x: auto;
+  
+  /* Scrollbar personalizado */
+  &::-webkit-scrollbar {
+    height: 4px;
+  }
+  
+  &::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.2);
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background: rgba(0, 255, 255, 0.3);
+    border-radius: 2px;
+    
+    &:hover {
+      background: rgba(0, 255, 255, 0.5);
+    }
+  }
+}
+
+.tab-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1rem 1.5rem;
+  background: transparent;
+  border: none;
+  border-bottom: 3px solid transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+  position: relative;
+  
+  .tab-icon {
+    font-size: 1.25rem;
+    transition: transform 0.3s ease;
+  }
+  
+  .tab-label {
+    font-size: 0.95rem;
+    font-weight: 500;
+  }
+  
+  .tab-badge {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--text-muted);
+    padding: 0.25rem 0.5rem;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    min-width: 2rem;
+    text-align: center;
+  }
+  
+  &:hover:not(.active) {
+    color: var(--text);
+    background: rgba(255, 255, 255, 0.02);
+    border-bottom-color: rgba(0, 255, 255, 0.3);
+    
+    .tab-icon {
+      transform: scale(1.1);
+    }
+    
+    .tab-badge {
+      background: rgba(0, 255, 255, 0.1);
+      color: var(--cyan);
+    }
+  }
+  
+  &.active {
+    color: var(--cyan);
+    border-bottom-color: var(--cyan);
+    background: rgba(0, 255, 255, 0.05);
+    
+    .tab-badge {
+      background: var(--cyan);
+      color: var(--dark);
+    }
+  }
+}
+
+/* ============================================
+   TABLA DE COMMITS (estilo Excel/registro)
+   ============================================ */
+.commits-table-container {
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  overflow-x: auto;
+  
+  /* Scrollbar horizontal */
+  &::-webkit-scrollbar {
+    height: 8px;
+  }
+  
+  &::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 4px;
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background: rgba(0, 255, 255, 0.3);
+    border-radius: 4px;
+    
+    &:hover {
+      background: rgba(0, 255, 255, 0.5);
+    }
+  }
+}
+
+.commits-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+  
+  /* Header de tabla */
+  thead {
+    background: rgba(0, 0, 0, 0.5);
+    border-bottom: 2px solid var(--cyan);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    
+    tr {
+      border-bottom: 2px solid rgba(0, 255, 255, 0.3);
+    }
+    
+    th {
+      padding: 1rem 1rem;
+      text-align: left;
+      color: var(--cyan);
+      font-weight: 600;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      white-space: nowrap;
+      border-right: 1px solid rgba(255, 255, 255, 0.05);
+      
+      &:last-child {
+        border-right: none;
+      }
+    }
+  }
+  
+  /* Cuerpo de tabla */
+  tbody {
+    tr.commit-row {
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      transition: background 0.2s ease;
+      
+      &:hover {
+        background: rgba(0, 255, 255, 0.05);
+      }
+      
+      &:last-child {
+        border-bottom: none;
+      }
+      
+      td {
+        padding: 1rem 1rem;
+        vertical-align: middle;
+        border-right: 1px solid rgba(255, 255, 255, 0.03);
+        
+        &:last-child {
+          border-right: none;
+        }
+      }
+    }
+  }
+  
+  /* Columnas específicas */
+  .col-icon {
+    width: 40px;
+    text-align: center;
+    
+    .commit-type-icon {
+      font-size: 1.25rem;
+      display: inline-block;
+    }
+  }
+  
+  .col-message {
+    min-width: 300px;
+    max-width: 500px;
+    
+    .message-container {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+    
+    .message-title {
+      color: var(--text);
+      font-weight: 500;
+      line-height: 1.4;
+    }
+    
+    .message-desc {
+      color: var(--text-muted);
+      font-size: 0.8rem;
+      line-height: 1.3;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+  }
+  
+  .col-author {
+    min-width: 150px;
+    
+    .author-cell {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .author-avatar-small {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    
+    .author-name-small {
+      color: var(--text);
+      font-size: 0.85rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+  
+  .col-date {
+    min-width: 120px;
+    
+    .date-relative {
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      white-space: nowrap;
+    }
+  }
+  
+  .col-stats {
+    min-width: 100px;
+    
+    .stats-cell {
+      display: flex;
+      gap: 0.5rem;
+      font-family: 'Courier New', monospace;
+      font-size: 0.8rem;
+    }
+    
+    .stat-add {
+      color: #4ade80;
+      font-weight: 600;
+    }
+    
+    .stat-del {
+      color: #f87171;
+      font-weight: 600;
+    }
+    
+    .stat-empty {
+      color: var(--text-muted);
+    }
+  }
+  
+  .col-sha {
+    min-width: 90px;
+    
+    .sha-link {
+      display: inline-block;
+      padding: 0.25rem 0.5rem;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 4px;
+      color: var(--text-muted);
+      font-family: 'Courier New', monospace;
+      font-size: 0.75rem;
+      text-decoration: none;
+      transition: all 0.2s ease;
+      
+      &:hover {
+        background: rgba(0, 255, 255, 0.1);
+        border-color: var(--cyan);
+        color: var(--cyan);
+      }
+    }
+  }
+}
+
+/* ============================================
+   ESTADOS (loading, error, empty)
+   ============================================ */
+.loading-state,
+.error-state,
+.empty-state {
+  text-align: center;
+  padding: 4rem 2rem;
+}
+
+.loading-spinner {
+  width: 60px;
+  height: 60px;
+  border: 4px solid rgba(0, 255, 255, 0.2);
+  border-top-color: var(--cyan);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 1rem;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.error-icon,
+.empty-icon {
+  font-size: 4rem;
+  display: block;
+  margin-bottom: 1rem;
+}
+
+.error-state h3,
+.empty-state h3 {
+  color: var(--text);
+  margin-bottom: 0.5rem;
+}
+
+.error-state p,
+.empty-state p {
+  color: var(--text-muted);
+  margin-bottom: 1.5rem;
+}
+
+.retry-btn {
+  padding: 0.75rem 1.5rem;
+  background: var(--cyan);
+  color: var(--dark);
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.retry-btn:hover {
+  background: var(--magenta);
+  box-shadow: 0 4px 15px rgba(255, 0, 85, 0.4);
+}
+
+/* ============================================
+   CARGA DE MÁS COMMITS
+   ============================================ */
+.load-more-section {
+  text-align: center;
+  margin-top: 2rem;
+}
+
+.load-more-btn {
+  padding: 1rem 2rem;
+  background: rgba(0, 255, 255, 0.1);
+  border: 2px solid var(--cyan);
+  border-radius: 8px;
+  color: var(--cyan);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.load-more-btn:hover {
+  background: var(--cyan);
+  color: var(--dark);
+  box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+}
+
+.loading-more {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  padding: 2rem;
+  color: var(--text-muted);
+}
+
+.loading-spinner-small {
+  width: 24px;
+  height: 24px;
+  border: 3px solid rgba(0, 255, 255, 0.2);
+  border-top-color: var(--cyan);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+@media (max-width: 768px) {
+  .commits-header {
+    padding: 2rem 1rem;
+    
+    h1 {
+      font-size: 1.75rem;
+    }
+  }
+
+  .tabs-navigation {
+    gap: 0;
+    
+    .tab-btn {
+      padding: 0.75rem 1rem;
+      font-size: 0.875rem;
+      
+      .tab-icon {
+        font-size: 1.1rem;
+      }
+      
+      .tab-label {
+        font-size: 0.85rem;
+      }
+      
+      .tab-badge {
+        font-size: 0.7rem;
+        padding: 0.2rem 0.4rem;
+        min-width: 1.5rem;
+      }
+    }
+  }
+  
+  /* Tabla: Ocultar columnas menos importantes en móvil */
+  .commits-table {
+    font-size: 0.8rem;
+    
+    thead th,
+    tbody td {
+      padding: 0.75rem 0.5rem;
+    }
+    
+    /* Ocultar stats y SHA en móvil */
+    .col-stats,
+    .col-sha {
+      display: none;
+    }
+    
+    .col-message {
+      min-width: 200px;
+      
+      .message-desc {
+        -webkit-line-clamp: 1;
+        line-clamp: 1;
+      }
+    }
+    
+    .col-author {
+      min-width: 100px;
+      
+      .author-name-small {
+        font-size: 0.75rem;
+      }
+    }
+    
+    .col-date {
+      min-width: 90px;
+      
+      .date-relative {
+        font-size: 0.75rem;
+      }
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .commits-header h1 {
+    font-size: 1.5rem;
+  }
+  
+  .commits-header .commits-subtitle {
+    font-size: 0.85rem;
+  }
+  
+  .tabs-navigation {
+    .tab-btn {
+      padding: 0.6rem 0.8rem;
+      
+      .tab-icon {
+        font-size: 1rem;
+      }
+      
+      .tab-label {
+        display: none; /* Solo mostrar icono y badge en móviles pequeños */
+      }
+    }
+  }
+  
+  /* Tabla: Reducir más en móviles pequeños */
+  .commits-table {
+    font-size: 0.75rem;
+    
+    /* También ocultar avatar en móviles muy pequeños */
+    .author-avatar-small {
+      display: none;
+    }
+    
+    .col-icon {
+      width: 30px;
+      
+      .commit-type-icon {
+        font-size: 1rem;
+      }
+    }
+    
+    .col-message {
+      min-width: 150px;
+      max-width: 200px;
+    }
+    
+    .col-author {
+      min-width: 80px;
+    }
+  }
+  
+  .load-more-btn {
+    padding: 0.75rem 1.25rem;
+    font-size: 0.85rem;
+  }
+}

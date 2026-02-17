@@ -1,0 +1,152 @@
+<div class="commits-page">
+  <div class="container">
+    <!-- Header -->
+    <div class="commits-header">
+      <h1>📝 Historial de Commits</h1>
+      <p class="commits-subtitle">
+        Seguimiento en tiempo real de todos los cambios en los repositorios del proyecto
+      </p>
+    </div>
+
+    <!-- Tabs navegación (estilo protagonistas) -->
+    <div class="tabs-navigation">
+      @for (repo of repositories; track repo.id) {
+        <button
+          class="tab-btn"
+          [class.active]="selectedRepo === repo.id"
+          (click)="selectRepo(repo.id)"
+        >
+          <span class="tab-icon">{{ repo.icon }}</span>
+          <span class="tab-label">{{ repo.name }}</span>
+          <span class="tab-badge">{{ repo.commits.length }}</span>
+        </button>
+      }
+    </div>
+
+    <!-- Contenido del repo seleccionado -->
+    @if (getActiveRepo(); as activeRepo) {
+      <!-- Loading inicial -->
+      @if (activeRepo.loading && activeRepo.commits.length === 0) {
+        <div class="loading-state">
+          <div class="loading-spinner"></div>
+          <p>Cargando commits de {{ activeRepo.name }}...</p>
+        </div>
+      }
+
+      <!-- Error -->
+      @if (activeRepo.error && activeRepo.commits.length === 0) {
+        <div class="error-state">
+          <span class="error-icon">❌</span>
+          <h3>Error al cargar commits</h3>
+          <p>No se pudieron cargar los commits de {{ activeRepo.name }}</p>
+          <button class="retry-btn" (click)="loadAllRepos()">
+            🔄 Reintentar
+          </button>
+        </div>
+      }
+
+      <!-- Lista de Commits - Formato Tabla -->
+      @if (activeRepo.commits.length > 0) {
+        <div class="commits-table-container">
+          <table class="commits-table">
+            <thead>
+              <tr>
+                <th class="col-icon"></th>
+                <th class="col-message">Mensaje</th>
+                <th class="col-date">Fecha</th>
+                <th class="col-stats">Cambios</th>
+                <th class="col-sha">SHA</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (commit of activeRepo.commits; track commit.sha_full) {
+                <tr class="commit-row">
+                  <!-- Icono tipo commit -->
+                  <td class="col-icon">
+                    <span 
+                      class="commit-type-icon"
+                      [style.color]="getCommitColor(commit.message)"
+                      [title]="getCommitIcon(commit.message)"
+                    >
+                      {{ getCommitIcon(commit.message) }}
+                    </span>
+                  </td>
+
+                  <!-- Mensaje del commit -->
+                  <td class="col-message">
+                    <div class="message-container">
+                      <span class="message-title">{{ getCommitTitle(commit.message) }}</span>
+                      @if (hasDescription(commit.message)) {
+                        <span class="message-desc">{{ getCommitDescription(commit.message) }}</span>
+                      }
+                    </div>
+                  </td>
+
+                  <!-- Autor con avatar -->
+                  <td class="col-author">
+                    <div class="author-cell">
+                      @if (commit.author.avatar_url) {
+                        <img 
+                          [src]="commit.author.avatar_url" 
+                          [alt]="commit.author.name"
+                          class="author-avatar-small"
+                        >
+                      }
+                      <span class="author-name-small">{{ commit.author.name }}</span>
+                    </div>
+                  </td>
+
+                  <!-- Fecha relativa -->
+                  <td class="col-date">
+                    <span class="date-relative">{{ getRelativeTime(commit.author.date) }}</span>
+                  </td>
+
+                  <!-- Stats (additions/deletions) -->
+                  <td class="col-stats">
+                    @if (commit.stats.total > 0) {
+                      <div class="stats-cell">
+                        <span class="stat-add">+{{ commit.stats.additions }}</span>
+                        <span class="stat-del">-{{ commit.stats.deletions }}</span>
+                      </div>
+                    } @else {
+                      <span class="stat-empty">—</span>
+                    }
+                  </td>
+
+                  <!-- SHA con enlace -->
+                  <td class="col-sha">
+                    <a 
+                      [href]="commit.url" 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      class="sha-link"
+                      title="Ver en GitHub"
+                    >
+                      {{ commit.sha }}
+                    </a>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Botón cargar más -->
+        <div class="load-more-section">
+          <button 
+            class="load-more-btn" 
+            (click)="loadMore(activeRepo)"
+            [disabled]="activeRepo.loading"
+          >
+            @if (activeRepo.loading) {
+              <div class="loading-spinner-small"></div>
+              <span>Cargando...</span>
+            } @else {
+              <span>⬇️ Cargar más commits</span>
+            }
+          </button>
+        </div>
+      }
+    }
+  </div>
+</div>

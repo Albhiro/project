@@ -1,0 +1,440 @@
+.capitulos-index {
+  padding: 4rem 0;
+}
+
+h1 {
+  text-align: center;
+  margin-bottom: 0.5rem;
+  font-size: 3rem;
+}
+
+.subtitle {
+  text-align: center;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  margin-bottom: 2rem;
+  font-size: 0.9rem;
+}
+
+/* Loading State */
+.loading-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  min-height: 400px;
+}
+
+.spinner {
+  width: 60px;
+  height: 60px;
+  border: 4px solid rgba(0, 255, 255, 0.1);
+  border-top-color: var(--cyan);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.loading-state p {
+  margin-top: 1.5rem;
+  color: var(--cyan);
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+/* Error State */
+.error-state {
+  text-align: center;
+  padding: 3rem 2rem;
+  background: rgba(255, 0, 0, 0.1);
+  border: 2px solid rgba(255, 0, 0, 0.3);
+  border-radius: 8px;
+  margin: 2rem 0;
+}
+
+.error-state p {
+  color: var(--magenta);
+  font-family: var(--font-mono);
+  font-size: 1rem;
+}
+
+/* Progress Bar Global */
+.progress-bar {
+  width: 100%;
+  height: 8px;
+  background: rgba(0, 255, 255, 0.1);
+  border-radius: 4px;
+  overflow: hidden;
+  margin: 2rem auto;
+  max-width: 800px;
+  position: relative;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--cyan), var(--magenta));
+  border-radius: 4px;
+  transition: width 0.5s ease;
+  box-shadow: 0 0 20px var(--cyan);
+}
+
+.progress-text {
+  text-align: center;
+  color: var(--cyan);
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  margin-top: 0.5rem;
+  margin-bottom: 3rem;
+}
+
+/* Tabs de Volúmenes */
+.volumenes-tabs {
+  margin-top: 3rem;
+}
+
+.tabs-header {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.tab-button {
+  background: rgba(0, 0, 0, 0.5);
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  padding: 1.5rem 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--text-muted);
+}
+
+.tab-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: var(--tab-color, #00ffff);
+  transform: scaleX(0);
+  transition: transform 0.3s ease;
+}
+
+.tab-button:hover {
+  border-color: var(--tab-color, #00ffff);
+  transform: translateY(-2px);
+}
+
+.tab-button:hover::before {
+  transform: scaleX(1);
+}
+
+.tab-button.active {
+  background: rgba(0, 255, 255, 0.05);
+  border-color: var(--tab-color, #00ffff);
+  color: var(--tab-color, #00ffff);
+  box-shadow:
+    0 0 20px rgba(0, 255, 255, 0.3),
+    inset 0 0 20px rgba(0, 255, 255, 0.1);
+}
+
+.tab-button.active::before {
+  transform: scaleX(1);
+  box-shadow: 0 0 10px var(--tab-color, #00ffff);
+}
+
+.tab-numero {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  opacity: 0.6;
+  letter-spacing: 2px;
+}
+
+.tab-titulo {
+  font-size: 1.1rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.tab-rango {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  opacity: 0.5;
+}
+
+.tab-badge {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  font-size: 1.2rem;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(1.2); }
+}
+
+/* Tabs Content */
+.tabs-content {
+  position: relative;
+  min-height: 400px;
+}
+
+.tab-panel {
+  animation: fadeIn 0.4s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Header del Volumen */
+.volumen-header {
+  background: linear-gradient(135deg,
+    rgba(0, 0, 0, 0.8) 0%,
+    rgba(0, 0, 0, 0.5) 100%
+  );
+  border: 2px solid var(--volumen-color, #00ffff);
+  border-radius: 8px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow:
+    0 0 30px rgba(0, 255, 255, 0.2),
+    inset 0 0 30px rgba(0, 255, 255, 0.05);
+}
+
+.volumen-info h2 {
+  color: var(--volumen-color, #00ffff);
+  text-shadow: 0 0 20px var(--volumen-color, #00ffff);
+  margin-bottom: 0.5rem;
+  font-size: 2rem;
+}
+
+.volumen-subtitulo {
+  color: var(--text-muted);
+  font-style: italic;
+  margin-bottom: 0.5rem;
+  font-size: 1rem;
+}
+
+.volumen-meta {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.estado-publicacion {
+  color: var(--cyan);
+  font-weight: 700;
+}
+
+.estado-planificacion {
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+/* Progress Circle */
+.volumen-progress {
+  flex-shrink: 0;
+}
+
+.progress-circle {
+  width: 100px;
+  height: 100px;
+}
+
+.progress-circle svg {
+  transform: rotate(-90deg);
+}
+
+.circle-bg {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.1);
+  stroke-width: 2.8;
+}
+
+.circle-progress {
+  fill: none;
+  stroke-width: 2.8;
+  stroke-linecap: round;
+  transition: stroke-dasharray 0.6s ease;
+  filter: drop-shadow(0 0 5px currentColor);
+}
+
+.progress-circle text {
+  fill: var(--cyan);
+  font-family: var(--font-mono);
+  font-size: 0.5rem;
+  font-weight: bold;
+  text-anchor: middle;
+  transform: rotate(90deg) translateX(18px);
+}
+
+/* Lista de Capítulos */
+.capitulos-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.capitulo-card {
+  background: rgba(0, 0, 0, 0.5);
+  border: 2px solid rgba(0, 255, 255, 0.2);
+  border-radius: 8px;
+  padding: 1.5rem;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.capitulo-card.publicado {
+  border-color: var(--cyan);
+  background: rgba(0, 255, 255, 0.03);
+}
+
+.capitulo-card.publicado:hover {
+  transform: translateX(5px);
+  box-shadow:
+    0 5px 25px rgba(0, 255, 255, 0.3),
+    inset 0 0 20px rgba(0, 255, 255, 0.05);
+  border-color: var(--cyan);
+}
+
+.capitulo-card.bloqueado {
+  opacity: 0.5;
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.capitulo-header {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+  position: relative;
+}
+
+.capitulo-icon {
+  font-size: 2rem;
+  flex-shrink: 0;
+  filter: grayscale(100%);
+  transition: filter 0.3s ease;
+}
+
+.capitulo-card.publicado .capitulo-icon {
+  filter: grayscale(0%);
+}
+
+.capitulo-info {
+  flex: 1;
+}
+
+.capitulo-info h4 {
+  margin: 0 0 0.5rem 0;
+  font-size: 1.1rem;
+  line-height: 1.4;
+}
+
+.capitulo-info h4 a {
+  color: var(--cyan);
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.capitulo-info h4 a:hover {
+  color: var(--magenta);
+  text-shadow: 0 0 10px var(--magenta);
+}
+
+.titulo-bloqueado {
+  color: var(--text-muted);
+}
+
+.capitulo-meta {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin: 0;
+}
+
+.lock-icon {
+  position: absolute;
+  top: 0;
+  right: 0;
+  font-size: 1.5rem;
+  opacity: 0.3;
+}
+
+.capitulo-excerpt {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  line-height: 1.6;
+  font-style: italic;
+}
+
+.coming-soon {
+  display: inline-block;
+  margin-top: 1rem;
+  padding: 0.25rem 0.75rem;
+  background: rgba(255, 0, 255, 0.1);
+  border: 1px solid var(--magenta);
+  border-radius: 4px;
+  color: var(--magenta);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .tabs-header {
+    grid-template-columns: 1fr;
+  }
+
+  .volumen-header {
+    flex-direction: column;
+    text-align: center;
+    gap: 1.5rem;
+  }
+
+  .volumen-info h2 {
+    font-size: 1.5rem;
+  }
+
+  .capitulo-card {
+    padding: 1rem;
+  }
+
+  .capitulo-icon {
+    font-size: 1.5rem;
+  }
+}

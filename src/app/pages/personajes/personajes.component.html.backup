@@ -1,0 +1,221 @@
+<section class="personajes-page">
+  <div class="container">
+    <h1>👥 Personajes de TRENDING GHOST</h1>
+    <p class="intro">
+      En un mundo donde tu existencia depende de tus views, cada personaje es una crítica viviente
+      a la cultura digital. <strong>Tu resolución es tu poder. Tus métricas son tu realidad.</strong>
+    </p>
+
+    <!-- Progress Bar -->
+    <div class="progress-personajes">
+      <div class="progress-bar-personajes">
+        <div class="progress-fill" [style.width.%]="progressService.getProgresoTotal()"></div>
+      </div>
+      <p class="progress-text">
+        @if (progressService.getCapituloActual() === 0) {
+          <strong>📚 Pre-Lanzamiento</strong> · Los personajes aparecerán según avance la historia
+        } @else {
+          <strong>📖 Capítulo {{progressService.getCapituloActual()}}</strong> · {{protagonistas.length + antagonistas.length + secundarios.length}} personajes desbloqueados
+        }
+      </p>
+      @if (progressService.getCapituloActual() === 0) {
+        <p class="aviso-spoilers">
+          🔒 Los personajes se desbloquearán progresivamente según aparezcan en la historia.
+        </p>
+      }
+    </div>
+
+    <div class="metricas-explicacion">
+      <h3>⚡ Sistema de Métricas</h3>
+      <div class="metricas-grid">
+        <div class="metrica-item">
+          <strong>Views:</strong> Controlan visibilidad (0 = invisible, 10M+ = omnipresente)
+        </div>
+        <div class="metrica-item">
+          <strong>Likes:</strong> Carisma y atractivo físico
+        </div>
+        <div class="metrica-item">
+          <strong>Shares:</strong> Clonación y multiplicación de presencia
+        </div>
+        <div class="metrica-item">
+          <strong>Comments:</strong> Volumen de voz e influencia
+        </div>
+      </div>
+    </div>
+
+    <!-- Protagonistas -->
+    <div class="categoria">
+      <h2>Protagonistas</h2>
+      <div class="personajes-grid">
+        @for (p of protagonistas; track p.nombre) {
+          <div class="personaje-card" [class.locked-card]="!isPersonajeDesbloqueado(p.nombre)">
+            @if (!isPersonajeDesbloqueado(p.nombre)) {
+              <div class="unlock-banner">🔒 Se desbloquea en Cap {{getCapRequerido(p.nombre)}}</div>
+            }
+            <div class="personaje-header">
+              <span class="personaje-icon">{{p.icono}}</span>
+              <div>
+                <h3>{{p.nombre}}</h3>
+                <p class="personaje-titulo">{{p.titulo}}</p>
+              </div>
+            </div>
+
+            <div class="personaje-stats">
+              <div class="stat">
+                <span class="stat-label">Views:</span>
+                <span class="stat-value">{{p.stats.views}}</span>
+              </div>
+              <div class="stat">
+                <span class="stat-label">Resolución:</span>
+                <span class="stat-value">{{p.stats.resolution}}</span>
+              </div>
+              <div class="stat">
+                <span class="stat-label">Poder:</span>
+                <span class="stat-value">{{p.stats.poder}}</span>
+              </div>
+            </div>
+
+            <p class="personaje-desc">{{p.descripcion}}</p>
+          </div>
+        }
+      </div>
+    </div>
+
+    <!-- Antagonistas -->
+    <div class="categoria">
+      <h2>Antagonistas</h2>
+      <div class="personajes-grid">
+        @for (p of antagonistas; track $index) {
+          @if (isPersonajeDesbloqueado(p.nombre)) {
+            <!-- Personaje Desbloqueado -->
+            <div class="personaje-card antagonista">
+              <div class="personaje-header">
+                <span class="personaje-icon">{{p.icono}}</span>
+                <div>
+                  <h3>{{p.nombre}}</h3>
+                  <p class="personaje-titulo">{{p.titulo}}</p>
+                </div>
+              </div>
+
+              <div class="personaje-stats">
+                <div class="stat">
+                  <span class="stat-label">Views:</span>
+                  <span class="stat-value">{{p.stats.views}}</span>
+                </div>
+                <div class="stat">
+                  <span class="stat-label">Resolución:</span>
+                  <span class="stat-value">{{p.stats.resolution}}</span>
+                </div>
+                <div class="stat">
+                  <span class="stat-label">Poder:</span>
+                  <span class="stat-value">{{p.stats.poder}}</span>
+                </div>
+              </div>
+
+              <p class="personaje-desc">{{p.descripcion}}</p>
+            </div>
+          } @else {
+            <!-- Personaje Bloqueado - Placeholder -->
+            <div class="personaje-card antagonista locked-placeholder">
+              <div class="locked-content-full">
+                <div class="lock-icon-big">🔒</div>
+                <h3 class="locked-title">Antagonista</h3>
+                <p class="locked-subtitle">Se desbloquea en Cap {{getCapRequerido(p.nombre)}}</p>
+                <div class="mystery-icon">❓</div>
+              </div>
+            </div>
+          }
+        }
+      </div>
+    </div>
+
+    <!-- Secundarios -->
+    <div class="categoria">
+      <h2>Secundarios</h2>
+      <div class="personajes-grid">
+        @for (p of secundarios; track $index) {
+          @if (isPersonajeDesbloqueado(p.nombre)) {
+            <!-- Personaje Desbloqueado -->
+            <div class="personaje-card">
+              <div class="personaje-header">
+                <span class="personaje-icon">{{p.icono}}</span>
+                <div>
+                  <h3>{{p.nombre}}</h3>
+                  <p class="personaje-titulo">{{p.titulo}}</p>
+                </div>
+              </div>
+
+              <div class="personaje-stats">
+                <div class="stat">
+                  <span class="stat-label">Views:</span>
+                  <span class="stat-value">{{p.stats.views}}</span>
+                </div>
+                <div class="stat">
+                  <span class="stat-label">Resolución:</span>
+                  <span class="stat-value">{{p.stats.resolution}}</span>
+                </div>
+                <div class="stat">
+                  <span class="stat-label">Poder:</span>
+                  <span class="stat-value">{{p.stats.poder}}</span>
+                </div>
+              </div>
+
+              <p class="personaje-desc">{{p.descripcion}}</p>
+            </div>
+          } @else {
+            <!-- Personaje Bloqueado - Placeholder -->
+            <div class="personaje-card locked-placeholder">
+              <div class="locked-content-full">
+                <div class="lock-icon-big">🔒</div>
+                <h3 class="locked-title">Personaje</h3>
+                <p class="locked-subtitle">Se desbloquea en Cap {{getCapRequerido(p.nombre)}}</p>
+                <div class="mystery-icon">❓</div>
+              </div>
+            </div>
+          }
+        }
+      </div>
+    </div>
+
+    <!-- Nota final -->
+    <div class="nota-box">
+      <h3>📊 Sobre este Cast</h3>
+      <p>
+        Esta es solo una <strong>muestra inicial</strong> del universo de personajes.
+        La serie completa incluye <strong>88+ perfiles únicos</strong>, desde influencers
+        de élite hasta Glitches del sistema, cada uno representando un aspecto diferente
+        de la cultura digital.
+      </p>
+      <p>
+        <strong>Esta lista se expandirá</strong> con cada capítulo publicado (días 14 y 23).
+        Cada personaje tiene backstory completo, motivaciones, y arcos narrativos
+        que intersectan con la búsqueda del Servidor Cero.
+      </p>
+      <div class="cast-stats">
+        <div class="cast-stat">
+          <span class="stat-numero">1</span>
+          <span class="stat-texto">Protagonista (Bazure)</span>
+        </div>
+        <div class="cast-stat">
+          <span class="stat-numero">4</span>
+          <span class="stat-texto">Antagonistas principales</span>
+        </div>
+        <div class="cast-stat">
+          <span class="stat-numero">7</span>
+          <span class="stat-texto">Aliados y secundarios</span>
+        </div>
+        <div class="cast-stat">
+          <span class="stat-numero">88+</span>
+          <span class="stat-texto">Total planificado (100 caps)</span>
+        </div>
+      </div>
+      <p class="nota-cta">
+        <a routerLink="/mundo">→ Explora el Mundo</a> para entender el contexto de estos personajes<br>
+        <a routerLink="/capitulos">→ Lee la Historia</a> para verlos en acción
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- Scroll to Top Button -->
+<app-scroll-to-top />

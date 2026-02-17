@@ -1,0 +1,190 @@
+<section class="personajes-page">
+  <div class="container">
+    <h1>{{ 'characters.title' | translate }}</h1>
+    <p class="intro">
+      {{ 'characters.intro' | translate }}
+      <strong>{{ 'characters.intro_bold' | translate }}</strong>
+    </p>
+
+    <!-- Progress Bar -->
+    <div class="progress-personajes">
+      <div class="progress-bar-personajes">
+        <div class="progress-fill" [style.width.%]="progressService.getProgresoTotal()"></div>
+      </div>
+      <p class="progress-text">
+        @if (progressService.getCapituloActual() === 0) {
+          <strong>{{ 'characters.pre_launch' | translate }}</strong> · {{ 'characters.pre_launch_desc' | translate }}
+        } @else {
+          <strong>{{ 'characters.current_chapter' | translate: {number: progressService.getCapituloActual()} }}</strong> · {{ 'characters.unlocked_count' | translate: {count: protagonistas.length + antagonistas.length + secundarios.length} }}
+        }
+      </p>
+      @if (progressService.getCapituloActual() === 0) {
+        <p class="aviso-spoilers">
+          {{ 'characters.locked_notice' | translate }}
+        </p>
+      }
+    </div>
+
+    <div class="metricas-explicacion">
+      <h3>{{ 'characters.metrics_title' | translate }}</h3>
+      <div class="metricas-grid">
+        <div class="metrica-item">
+          <strong>{{ 'characters.views' | translate }}</strong> {{ 'characters.views_desc' | translate }}
+        </div>
+        <div class="metrica-item">
+          <strong>{{ 'characters.likes' | translate:'' }}</strong> {{ 'characters.likes_desc' | translate }}
+        </div>
+        <div class="metrica-item">
+          <strong>Shares:</strong> {{ 'characters.shares_desc' | translate }}
+        </div>
+        <div class="metrica-item">
+          <strong>Comments:</strong> {{ 'characters.comments_desc' | translate }}
+        </div>
+      </div>
+    </div>
+
+    <!-- Protagonistas -->
+    <div class="categoria">
+      <h2>{{ 'characters.protagonists' | translate }}</h2>
+      <div class="personajes-grid">
+        @for (p of protagonistas; track p.nombre) {
+          <div class="personaje-card">
+            <div class="personaje-header">
+              <span class="personaje-icon">{{getPersonajeIcono(p)}}</span>
+              <div>
+                <h3>{{p.nombre}}</h3>
+                <p class="personaje-titulo">{{getPersonajeTitulo(p)}}</p>
+              </div>
+            </div>
+
+            <div class="personaje-stats">
+              <div class="stat">
+                <span class="stat-label">{{ 'characters.views' | translate }}</span>
+                <span class="stat-value">{{getPersonajeStats(p).views}}</span>
+              </div>
+              <div class="stat">
+                <span class="stat-label">{{ 'characters.resolution' | translate }}</span>
+                <span class="stat-value">{{getPersonajeStats(p).resolution}}</span>
+              </div>
+              <div class="stat">
+                <span class="stat-label">{{ 'characters.power' | translate }}</span>
+                <span class="stat-value">{{getPersonajeStats(p).poder}}</span>
+              </div>
+            </div>
+
+            <p class="personaje-desc">{{getPersonajeDescripcion(p)}}</p>
+          </div>
+        }
+      </div>
+    </div>
+
+    <!-- Antagonistas -->
+    <div class="categoria">
+      <h2>{{ 'characters.antagonists' | translate }}</h2>
+      <div class="personajes-grid">
+        @for (p of antagonistas; track $index) {
+          <!-- Personaje -->
+          <div class="personaje-card antagonista">
+            <div class="personaje-header">
+              <span class="personaje-icon">{{getPersonajeIcono(p)}}</span>
+              <div>
+                <h3>{{p.nombre}}</h3>
+                <p class="personaje-titulo">{{getPersonajeTitulo(p)}}</p>
+              </div>
+            </div>
+
+              <div class="personaje-stats">
+                <div class="stat">
+                  <span class="stat-label">{{ 'characters.views' | translate }}</span>
+                  <span class="stat-value">{{getPersonajeStats(p).views}}</span>
+                </div>
+                <div class="stat">
+                  <span class="stat-label">{{ 'characters.resolution' | translate }}</span>
+                  <span class="stat-value">{{getPersonajeStats(p).resolution}}</span>
+                </div>
+                <div class="stat">
+                  <span class="stat-label">{{ 'characters.power' | translate }}</span>
+                  <span class="stat-value">{{getPersonajeStats(p).poder}}</span>
+                </div>
+              </div>
+
+              <p class="personaje-desc">{{getPersonajeDescripcion(p)}}</p>
+            </div>
+        }
+      </div>
+    </div>
+
+    <!-- Secundarios -->
+    <div class="categoria">
+      <h2>{{ 'characters.secondary' | translate }}</h2>
+      <div class="personajes-grid">
+        @for (p of secundarios; track $index) {
+          <!-- Personaje -->
+          <div class="personaje-card">
+            <div class="personaje-header">
+              <span class="personaje-icon">{{getPersonajeIcono(p)}}</span>
+              <div>
+                <h3>{{p.nombre}}</h3>
+                <p class="personaje-titulo">{{getPersonajeTitulo(p)}}</p>
+              </div>
+            </div>
+
+            <div class="personaje-stats">
+              <div class="stat">
+                <span class="stat-label">{{ 'characters.views' | translate }}</span>
+                <span class="stat-value">{{getPersonajeStats(p).views}}</span>
+              </div>
+              <div class="stat">
+                <span class="stat-label">{{ 'characters.resolution' | translate }}</span>
+                <span class="stat-value">{{getPersonajeStats(p).resolution}}</span>
+              </div>
+              <div class="stat">
+                <span class="stat-label">{{ 'characters.power' | translate }}</span>
+                <span class="stat-value">{{getPersonajeStats(p).poder}}</span>
+              </div>
+            </div>
+
+            <p class="personaje-desc">{{getPersonajeDescripcion(p)}}</p>
+          </div>
+        }
+      </div>
+    </div>
+
+    <!-- Nota final -->
+    <div class="nota-box">
+      <h3>{{ 'characters.cast_title' | translate }}</h3>
+      <p>
+        {{ 'characters.cast_desc_1' | translate }} <strong>{{ 'characters.cast_desc_1_bold' | translate }}</strong> {{ 'characters.cast_desc_1_end' | translate }}
+        <strong>{{ 'characters.cast_desc_1_bold_2' | translate }}</strong>{{ 'characters.cast_desc_1_end_2' | translate }}
+      </p>
+      <p>
+        <strong>{{ 'characters.cast_desc_2' | translate }}</strong> {{ 'characters.cast_desc_2_end' | translate }}
+      </p>
+      <div class="cast-stats">
+        <div class="cast-stat">
+          <span class="stat-numero">1</span>
+          <span class="stat-texto">{{ 'characters.cast_stat_protagonist' | translate }}</span>
+        </div>
+        <div class="cast-stat">
+          <span class="stat-numero">4</span>
+          <span class="stat-texto">{{ 'characters.cast_stat_antagonists' | translate }}</span>
+        </div>
+        <div class="cast-stat">
+          <span class="stat-numero">7</span>
+          <span class="stat-texto">{{ 'characters.cast_stat_allies' | translate }}</span>
+        </div>
+        <div class="cast-stat">
+          <span class="stat-numero">88+</span>
+          <span class="stat-texto">{{ 'characters.cast_stat_total' | translate }}</span>
+        </div>
+      </div>
+      <p class="nota-cta">
+        <a routerLink="/mundo">{{ 'characters.cta_world' | translate }}</a> {{ 'characters.cta_world_desc' | translate }}<br>
+        <a routerLink="/capitulos">{{ 'characters.cta_chapters' | translate }}</a> {{ 'characters.cta_chapters_desc' | translate }}
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- Scroll to Top Button -->
+<app-scroll-to-top />

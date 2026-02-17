@@ -1,0 +1,105 @@
+<!-- Home Page -->
+<section class="hero">
+  <div class="container">
+    <!-- Logo Ultraviolento Animado con Rotación Glitch -->
+    <div class="hero-logo" #heroLogo>
+      <img
+        [src]="currentLogo"
+        [class.glitch-active]="isGlitching"
+        alt="TRENDING GHOST - Logo"
+        class="logo-main">
+    </div>
+
+    <p class="hero-tagline">
+      <br>
+      {{ 'home.hero.tagline_line1' | translate }}<br>
+      {{ 'home.hero.tagline_line2' | translate }}<br>
+      {{ 'home.hero.tagline_line3' | translate }} <br> {{ 'home.hero.tagline_line4' | translate }}<br>
+    </p>
+  </div>
+</section>
+
+<!-- What is this? -->
+<section class="intro-section">
+  <div class="container">
+    <h2>{{ 'home.intro.title' | translate }}</h2>
+
+    <div class="intro-content">
+      <div class="intro-block">
+        <p>
+          <strong>{{ 'home.intro.date' | translate }}</strong> {{ 'home.intro.update' | translate }}
+        </p>
+        <p>
+          {{ 'home.intro.physics' | translate }}
+        </p>
+        <p>
+          <strong>{{ 'home.intro.bazure_intro' | translate }}</strong>
+        </p>
+        <p>
+          {{ 'home.intro.bazure_awakening' | translate }}
+        </p>
+        <p>
+          {{ 'home.intro.bazure_unique' | translate }}
+        </p>
+        <p>
+          <strong>{{ 'home.intro.tagline_final' | translate }}</strong>
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Quick Links to Lore -->
+<section class="anti-features">
+  <div class="container">
+    <h3>{{ 'home.anti_features.title' | translate }}</h3>
+    <ul class="anti-features-list">
+      <li>❌ {{ 'home.anti_features.analytics' | translate }}</li>
+      <li>❌ {{ 'home.anti_features.cookies' | translate }}</li>
+      <li>❌ {{ 'home.anti_features.newsletter' | translate }}</li>
+      <li>❌ {{ 'home.anti_features.paywalls' | translate }}</li>
+      <li>❌ {{ 'home.anti_features.ads' | translate }}</li>
+      <li>❌ {{ 'home.anti_features.money_first' | translate }}</li>
+    </ul>
+  </div>
+</section>
+
+<section class="pro-features">
+  <div class="container">
+    <h3>{{ 'home.pro_features.title' | translate }}</h3>
+    <ul class="pro-features-list">
+      <li>✅ {{ 'home.pro_features.like' | translate }}</li>
+      <li>✅ {{ 'home.pro_features.want' | translate }}</li>
+      <li>✅ {{ 'home.pro_features.contribute' | translate }}</li>
+      <li>✅ {{ 'home.pro_features.share' | translate }}</li>
+    </ul>
+  </div>
+</section>
+
+<!-- Quick Links to Lore -->
+<section class="lore-preview">
+  <div class="container">
+    <div class="lore-grid">
+      <a routerLink="/mundo" class="nav-card">
+        <span class="card-icon">🌆</span>
+        <h4>{{ 'home.lore_preview.world.title' | translate }}</h4>
+        <p>{{ 'home.lore_preview.world.description' | translate }}</p>
+      </a>
+
+      <a routerLink="/personajes" class="nav-card">
+        <span class="card-icon">[:)]</span>
+        <h4>{{ 'home.lore_preview.characters.title' | translate }}</h4>
+        <p>{{ 'home.lore_preview.characters.description' | translate }}</p>
+      </a>
+
+      <a routerLink="/sobre" class="nav-card">
+        <span class="card-icon">ℹ️</span>
+        <h4>{{ 'home.lore_preview.about.title' | translate }}</h4>
+        <p>{{ 'home.lore_preview.about.description' | translate }}</p>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- Scroll to Top Button -->
+<app-scroll-to-top />

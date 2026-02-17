@@ -1,0 +1,33 @@
+<div class="capitulo-wrapper" #capituloContainer>
+  <div class="capitulo-contenido" *ngIf="capitulo">
+
+    <!-- Header del capítulo -->
+    <header class="capitulo-header">
+      <div class="capitulo-meta">
+        <span class="volumen">VOLUMEN {{ capitulo.volumen }}</span>
+        <span class="separador">/</span>
+        <span class="numero">CAPÍTULO {{ capitulo.numero }}</span>
+      </div>
+      <h1 class="capitulo-titulo">{{ capitulo.titulo }}</h1>
+      <div class="capitulo-info">
+        <span class="fecha">📅 {{ capitulo.fecha_publicacion }}</span>
+        <span class="separador">·</span>
+        <span class="palabras">📝 {{ capitulo.palabras }} palabras</span>
+        <span class="separador">·</span>
+        <span class="lectura">⏱️ {{ capitulo.minutos_lectura }} min</span>
+      </div>
+    </header>
+
+    <!-- Contenido HTML del capítulo -->
+    <article class="capitulo-texto">
+      <div [innerHTML]="capitulo.contenido_html | sanitizeHtml"></div>
+    </article>
+
+  </div>
+
+  <!-- Mensaje si no se encuentra el capítulo -->
+  <div class="capitulo-no-encontrado" *ngIf="!capitulo">
+    <h2>❌ Capítulo no encontrado</h2>
+    <p>El capítulo #{{ numeroCapitulo }} no existe o no está disponible.</p>
+  </div>
+</div>

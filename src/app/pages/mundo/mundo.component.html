@@ -1,0 +1,454 @@
+<section class="mundo-page">
+  <div class="container">
+    <h1>{{ 'world.title' | translate }}</h1>
+    <p class="intro">
+      {{ 'world.intro' | translate }} <strong>{{ 'world.intro_bold' | translate }}</strong> {{ 'world.intro_end' | translate }}
+    </p>
+
+    <!-- Progress Bar -->
+    <div class="progress-mundo">
+      <div class="progress-bar-mundo">
+        <div class="progress-fill" [style.width.%]="progressService.getProgresoTotal()"></div>
+      </div>
+      <p class="progress-text">
+        @if (progressService.getCapituloActual() === 0) {
+          <strong>{{ 'world.pre_launch' | translate }}</strong> · {{ 'world.pre_launch_desc' | translate }}
+        } @else {
+          <strong>{{ 'world.current_chapter' | translate: {number: progressService.getCapituloActual()} }}</strong> · {{ 'world.current_volume' | translate: {number: progressService.getVolumenActual()} }}
+        }
+      </p>
+      @if (progressService.getCapituloActual() === 0) {
+        <p class="aviso-spoilers">
+          {{ 'world.locked_notice' | translate }}
+        </p>
+      }
+    </div>
+
+    <!-- Loading State -->
+    @if (loading) {
+      <div class="loading-state">
+        <div class="spinner"></div>
+        <p>{{ 'world.loading' | translate }}</p>
+      </div>
+    }
+
+    <!-- Error State -->
+    @if (error && !loading) {
+      <div class="error-state">
+        <p>{{ 'world.error' | translate }}</p>
+      </div>
+    }
+
+    <!-- Content -->
+    @if (!loading && !error) {
+      <!-- Quick Nav -->
+      @if (ubicaciones.length > 0 || worldbuilding.size > 0) {
+        <nav class="mundo-nav">
+          <h3 class="nav-title">{{ 'world.quick_nav' | translate }}</h3>
+
+          <!-- Ubicaciones -->
+          @if (ubicaciones.length > 0) {
+            <div class="nav-section">
+              <h4 class="nav-section-title">{{ 'world.locations' | translate }}</h4>
+              <div class="nav-grid">
+                @for (ubicacion of ubicaciones; track ubicacion.slug) {
+                  <a
+                    (click)="scrollToSection('ubicacion-' + ubicacion.slug)"
+                    class="nav-card"
+                    [title]="ubicacion.nombre">
+                    <span class="nav-icon">{{ubicacion.icono || '📍'}}</span>
+                    <span class="nav-label">{{ubicacion.nombre}}</span>
+                  </a>
+                }
+              </div>
+            </div>
+          }
+
+          <!-- Worldbuilding -->
+          @if (worldbuilding.size > 0) {
+            <div class="nav-section">
+              <h4 class="nav-section-title">{{ 'world.worldbuilding' | translate }}</h4>
+              <div class="nav-grid">
+                @for (key of getWorldbuildingKeys(); track key) {
+                  <a
+                    (click)="scrollToSection('wb-' + key)"
+                    class="nav-card"
+                    [title]="formatTableName(key)">
+                    <span class="nav-icon">{{getTableIcon(key)}}</span>
+                    <span class="nav-label">{{getTableShortName(key)}}</span>
+                  </a>
+                }
+              </div>
+            </div>
+          }
+        </nav>
+      }
+
+      <!-- SECCIÓN: UBICACIONES -->
+      @if (ubicaciones.length > 0) {
+        <section class="ubicaciones-section">
+          <h2 class="section-title">{{ 'world.locations_title' | translate }}</h2>
+          <p class="section-intro">
+            {{ 'world.locations_intro' | translate: {number: progressService.getCapituloActual()} }}
+          </p>
+
+          <div class="ubicaciones-grid">
+            @for (ubicacion of ubicaciones; track ubicacion.slug) {
+              <article [id]="'ubicacion-' + ubicacion.slug" class="ubicacion-card">
+                <!-- Header -->
+                <div class="ubicacion-header">
+                  <div class="ubicacion-title-row">
+                    <span class="ubicacion-icono-grande">{{ubicacion.icono || '📍'}}</span>
+                    <div class="ubicacion-title-group">
+                      <h3 class="ubicacion-nombre">{{ubicacion.nombre}}</h3>
+                      <span class="ubicacion-tipo-badge">{{ubicacion.tipo}}</span>
+                    </div>
+                  </div>
+                  <span class="ubicacion-peligro-badge">{{getPeligrosidadBadge(ubicacion.peligrosidad)}}</span>
+                </div>
+
+                <!-- Descripción corta -->
+                <p class="ubicacion-descripcion-corta">{{ubicacion.descripcion_corta}}</p>
+
+                <!-- Stats Grid -->
+                <div class="ubicacion-stats-grid">
+                  @if (ubicacion.poblacion > 0) {
+                    <div class="stat-box">
+                      <span class="stat-icon">👥</span>
+                      <div class="stat-content">
+                        <span class="stat-label">Población</span>
+                        <span class="stat-value">{{formatPoblacion(ubicacion.poblacion)}}</span>
+                      </div>
+                    </div>
+                  }
+                  @if (ubicacion['nivel_señal'] > 0) {
+                    <div class="stat-box">
+                      <span class="stat-icon">📶</span>
+                      <div class="stat-content">
+                        <span class="stat-label">Señal</span>
+                        <span class="stat-value">{{ubicacion['nivel_señal']}}/5</span>
+                      </div>
+                    </div>
+                  }
+                  @if (ubicacion.trending_promedio > 0) {
+                    <div class="stat-box">
+                      <span class="stat-icon">🔥</span>
+                      <div class="stat-content">
+                        <span class="stat-label">Trending</span>
+                        <span class="stat-value">{{formatNumber(ubicacion.trending_promedio)}}</span>
+                      </div>
+                    </div>
+                  }
+                  @if (ubicacion.clima) {
+                    <div class="stat-box stat-box-wide">
+                      <span class="stat-icon">🌤️</span>
+                      <div class="stat-content">
+                        <span class="stat-label">Clima</span>
+                        <span class="stat-value">{{ubicacion.clima}}</span>
+                      </div>
+                    </div>
+                  }
+                </div>
+
+                <!-- Descripción Detallada -->
+                @if (ubicacion.descripcion_completa) {
+                  <div class="ubicacion-section">
+                    <h4 class="section-subtitle">📖 Descripción Detallada</h4>
+                    <p class="ubicacion-descripcion-completa">{{ubicacion.descripcion_completa}}</p>
+                  </div>
+                }
+
+                <!-- Grid de detalles adicionales -->
+                <div class="ubicacion-details-grid">
+                  <!-- Puntos de interés -->
+                  @if (ubicacion.puntos_interes) {
+                    <div class="detail-box">
+                      <h4 class="detail-title">📍 Puntos de Interés</h4>
+                      <p class="detail-content">{{ubicacion.puntos_interes}}</p>
+                    </div>
+                  }
+
+                  <!-- Habitantes -->
+                  @if (ubicacion.habitantes_principales) {
+                    <div class="detail-box">
+                      <h4 class="detail-title">👥 Habitantes</h4>
+                      <p class="detail-content">{{ubicacion.habitantes_principales}}</p>
+                    </div>
+                  }
+
+                  <!-- Control -->
+                  @if (ubicacion.controlada_por) {
+                    <div class="detail-box">
+                      <h4 class="detail-title">⚔️ Controlada por</h4>
+                      <p class="detail-content">{{ubicacion.controlada_por}}</p>
+                    </div>
+                  }
+
+                  <!-- Efectos especiales -->
+                  @if (ubicacion.efectos_especiales) {
+                    <div class="detail-box">
+                      <h4 class="detail-title">✨ Efectos Especiales</h4>
+                      <p class="detail-content">{{ubicacion.efectos_especiales}}</p>
+                    </div>
+                  }
+                </div>
+
+                <!-- Enemigos comunes -->
+                @if (ubicacion.enemigos_comunes || ubicacion.enemigos.length > 0) {
+                  <div class="ubicacion-section">
+                    <h4 class="section-subtitle">💀 Enemigos Comunes</h4>
+                    @if (ubicacion.enemigos_comunes) {
+                      <p class="enemigos-descripcion">{{ubicacion.enemigos_comunes}}</p>
+                    }
+                    @if (ubicacion.enemigos.length > 0) {
+                      <div class="enemigos-list">
+                        @for (enemigo of ubicacion.enemigos; track enemigo.id) {
+                          <div class="enemigo-chip">
+                            <span class="enemigo-nombre">{{enemigo.nombre}}</span>
+                            <span class="enemigo-tier" [class]="'tier-' + enemigo.tier.toLowerCase()">{{enemigo.tier}}</span>
+                          </div>
+                        }
+                      </div>
+                    }
+                  </div>
+                }
+
+                <!-- Apariciones en la historia -->
+                @if (ubicacion.apariciones.length > 0) {
+                  <div class="ubicacion-section">
+                    <h4 class="section-subtitle">📖 Apariciones en la Historia</h4>
+                    <div class="apariciones-list">
+                      @for (aparicion of ubicacion.apariciones; track aparicion.cap_id) {
+                        <div class="aparicion-chip" [class.aparicion-principal]="aparicion.es_principal === 1">
+                          <span class="aparicion-numero">Cap {{aparicion.numero}}</span>
+                          @if (aparicion.es_principal === 1) {
+                            <span class="aparicion-badge">⭐ Principal</span>
+                          }
+                        </div>
+                      }
+                    </div>
+                  </div>
+                }
+              </article>
+            }
+          </div>
+        </section>
+      } @else {
+        <div class="empty-state">
+          <div class="empty-icon">🗺️</div>
+          <h3 class="empty-title">No hay ubicaciones desbloqueadas aún</h3>
+          <p class="empty-text">Las ubicaciones se desbloquearán progresivamente según avance la historia.</p>
+        </div>
+      }
+
+      <!-- SECCIÓN: WORLDBUILDING -->
+      @if (worldbuilding.size > 0) {
+        <section class="worldbuilding-section">
+          <h2 class="section-title">📚 Worldbuilding</h2>
+          <p class="section-intro">
+            Conceptos, sistemas y mecánicas del mundo de TRENDING GHOST.
+          </p>
+
+          <div class="worldbuilding-grid">
+            <!-- Iterar todas las tablas -->
+            @for (key of getWorldbuildingKeys(); track key) {
+              <article [id]="'wb-' + key" class="worldbuilding-card">
+                <div class="worldbuilding-header">
+                  <span class="wb-icon">{{getTableIcon(key)}}</span>
+                  <h3 class="wb-title">{{formatTableName(key)}}</h3>
+                  <span class="wb-count">{{worldbuilding.get(key)?.datos?.length || 0}} entradas</span>
+                </div>
+
+                <div class="worldbuilding-content">
+                  @for (item of worldbuilding.get(key)?.datos || []; track item.id) {
+                    <div class="wb-item">
+                      <!-- Título del item -->
+                      <h4 class="wb-item-title">
+                        {{item.nombre || item.termino || item.concepto || item.stat_nombre || item.nombre_stat || 'Sin título'}}
+                      </h4>
+
+                      <!-- Descripción/Definición -->
+                      @if (item.descripcion || item.definicion) {
+                        <p class="wb-item-descripcion">
+                          {{item.descripcion || item.definicion}}
+                        </p>
+                      }
+
+                      <!-- Campos específicos por tipo de tabla -->
+                      <div class="wb-item-details">
+                        <!-- CONCEPTOS: ejemplo -->
+                        @if (key === 'conceptos' && item.ejemplo) {
+                          <div class="wb-detail">
+                            <span class="wb-detail-label">💡 Ejemplo:</span>
+                            <span class="wb-detail-value">{{item.ejemplo}}</span>
+                          </div>
+                        }
+
+                        <!-- SISTEMA STATS: cómo mejorar y rango -->
+                        @if (key === 'sistema_stats') {
+                          @if (item.como_mejorar) {
+                            <div class="wb-detail">
+                              <span class="wb-detail-label">📈 Cómo mejorar:</span>
+                              <span class="wb-detail-value">{{item.como_mejorar}}</span>
+                            </div>
+                          }
+                          @if (item.rango_minimo !== null || item.rango_maximo !== null) {
+                            <div class="wb-detail">
+                              <span class="wb-detail-label">📊 Rango:</span>
+                              <span class="wb-detail-value">{{item.rango_minimo}} - {{item.rango_maximo}}</span>
+                            </div>
+                          }
+                        }
+
+                        <!-- JERGA: ejemplo de uso -->
+                        @if (key === 'jerga' && item.ejemplo_uso) {
+                          <div class="wb-detail wb-detail-ejemplo">
+                            <span class="wb-detail-label">💬</span>
+                            <span class="wb-detail-value-italic">"{{item.ejemplo_uso}}"</span>
+                          </div>
+                        }
+
+                        <!-- OCUPACIONES: salario y stats -->
+                        @if (key === 'ocupaciones') {
+                          @if (item.salario_promedio_mensual) {
+                            <div class="wb-detail">
+                              <span class="wb-detail-label">💰 Salario:</span>
+                              <span class="wb-detail-value">
+                                {{item.salario_promedio_mensual}} {{item.moneda || 'créditos'}}/mes
+                              </span>
+                            </div>
+                          }
+                          @if (item.stats_necesarios) {
+                            <div class="wb-detail">
+                              <span class="wb-detail-label">📊 Stats requeridos:</span>
+                              <span class="wb-detail-value">{{item.stats_necesarios}}</span>
+                            </div>
+                          }
+                        }
+
+                        <!-- MONEDAS: tipo y conversión -->
+                        @if (key === 'monedas') {
+                          @if (item.simbolo) {
+                            <div class="wb-detail">
+                              <span class="wb-detail-label">💱 Símbolo:</span>
+                              <span class="wb-detail-value">{{item.simbolo}}</span>
+                            </div>
+                          }
+                          @if (item.tipo) {
+                            <div class="wb-detail">
+                              <span class="wb-detail-label">📝 Tipo:</span>
+                              <span class="wb-detail-value">{{item.tipo}}</span>
+                            </div>
+                          }
+                          @if (item.conversion_usd) {
+                            <div class="wb-detail">
+                              <span class="wb-detail-label">💵 Equivalencia:</span>
+                              <span class="wb-detail-value">
+                                1 {{item.simbolo}} ≈ ${{item.conversion_usd}} USD
+                              </span>
+                            </div>
+                          }
+                        }
+
+                        <!-- ALIMENTOS: precio y efectos -->
+                        @if (key === 'alimentos') {
+                          @if (item.precio_promedio) {
+                            <div class="wb-detail">
+                              <span class="wb-detail-label">💰 Precio:</span>
+                              <span class="wb-detail-value">{{item.precio_promedio}} créditos</span>
+                            </div>
+                          }
+                          @if (item.efectos_stats) {
+                            <div class="wb-detail">
+                              <span class="wb-detail-label">✨ Efectos:</span>
+                              <span class="wb-detail-value">{{item.efectos_stats}}</span>
+                            </div>
+                          }
+                        }
+
+                        <!-- TIPOS VIVIENDA: precio -->
+                        @if (key === 'tipos_vivienda' && item.precio_promedio_mensual) {
+                          <div class="wb-detail">
+                            <span class="wb-detail-label">💰 Alquiler mensual:</span>
+                            <span class="wb-detail-value">{{item.precio_promedio_mensual}} créditos</span>
+                          </div>
+                        }
+
+                        <!-- ESTILOS MODA: costo y stats -->
+                        @if (key === 'estilos_moda') {
+                          @if (item.costo_promedio) {
+                            <div class="wb-detail">
+                              <span class="wb-detail-label">💰 Costo:</span>
+                              <span class="wb-detail-value">{{item.costo_promedio}} créditos</span>
+                            </div>
+                          }
+                          @if (item.bonus_stats) {
+                            <div class="wb-detail">
+                              <span class="wb-detail-label">✨ Bonus:</span>
+                              <span class="wb-detail-value">{{item.bonus_stats}}</span>
+                            </div>
+                          }
+                        }
+
+                        <!-- FESTIVIDADES: fecha -->
+                        @if (key === 'festividades' && item.fecha) {
+                          <div class="wb-detail">
+                            <span class="wb-detail-label">📅 Fecha:</span>
+                            <span class="wb-detail-value">{{item.fecha}}</span>
+                          </div>
+                        }
+
+                        <!-- ENFERMEDADES: síntomas y cura -->
+                        @if (key === 'enfermedades') {
+                          @if (item.sintomas) {
+                            <div class="wb-detail">
+                              <span class="wb-detail-label">🩺 Síntomas:</span>
+                              <span class="wb-detail-value">{{item.sintomas}}</span>
+                            </div>
+                          }
+                          @if (item.cura) {
+                            <div class="wb-detail">
+                              <span class="wb-detail-label">💊 Cura:</span>
+                              <span class="wb-detail-value">{{item.cura}}</span>
+                            </div>
+                          }
+                        }
+
+                        <!-- INSTITUCIONES EDUCATIVAS: ubicación y costo -->
+                        @if (key === 'instituciones_educativas') {
+                          @if (item.ubicacion) {
+                            <div class="wb-detail">
+                              <span class="wb-detail-label">📍 Ubicación:</span>
+                              <span class="wb-detail-value">{{item.ubicacion}}</span>
+                            </div>
+                          }
+                          @if (item.costo_anual) {
+                            <div class="wb-detail">
+                              <span class="wb-detail-label">💰 Costo anual:</span>
+                              <span class="wb-detail-value">{{item.costo_anual}} créditos</span>
+                            </div>
+                          }
+                        }
+
+                        <!-- PRECIOS REFERENCIA: valor -->
+                        @if (key === 'precios_referencia' && item.precio) {
+                          <div class="wb-detail">
+                            <span class="wb-detail-label">💰 Precio:</span>
+                            <span class="wb-detail-value">{{item.precio}} créditos</span>
+                          </div>
+                        }
+                      </div>
+                    </div>
+                  }
+                </div>
+              </article>
+            }
+          </div>
+        </section>
+      }
+    }
+  </div>
+</section>
+
+<!-- Scroll to Top Button -->
+<app-scroll-to-top />

@@ -1,0 +1,445 @@
+<section class="mundo-page">
+  <div class="container">
+    <!-- Hero Header -->
+    <div class="mundo-hero">
+      <h1 class="mundo-title">{{ 'world.title' | translate }}</h1>
+      <p class="mundo-subtitle">
+        {{ 'world.intro' | translate }} <strong>{{ 'world.intro_bold' | translate }}</strong> {{ 'world.intro_end' | translate }}
+      </p>
+    </div>
+
+    <!-- Progress Bar -->
+    <div class="progress-mundo">
+      <div class="progress-bar-mundo">
+        <div class="progress-fill" [style.width.%]="progressService.getProgresoTotal()"></div>
+      </div>
+      <div class="progress-info">
+        <span class="progress-text">
+          @if (progressService.getCapituloActual() === 0) {
+            <strong>{{ 'world.pre_launch' | translate }}</strong> · {{ 'world.pre_launch_desc' | translate }}
+          } @else {
+            <strong>{{ 'world.current_chapter' | translate: {number: progressService.getCapituloActual()} }}</strong> · {{ 'world.current_volume' | translate: {number: progressService.getVolumenActual()} }}
+          }
+        </span>
+        @if (progressService.getCapituloActual() === 0) {
+          <span class="aviso-spoilers">
+            {{ 'world.locked_notice_short' | translate }}
+          </span>
+        }
+      </div>
+    </div>
+
+    <!-- Loading State -->
+    @if (loading) {
+      <div class="loading-state">
+        <div class="loading-spinner"></div>
+        <p>{{ 'world.loading' | translate }}</p>
+      </div>
+    }
+
+    <!-- Error State -->
+    @if (error && !loading) {
+      <div class="error-state">
+        <span class="error-icon">❌</span>
+        <p class="error-text">{{ 'world.error_text' | translate }}</p>
+      </div>
+    }
+
+    <!-- Content -->
+    @if (!loading && !error) {
+      <!-- Main Tabs -->
+      <div class="tabs-container">
+        <nav class="tabs-nav">
+          <button
+            class="tab-button"
+            [class.active]="activeTab === 'ubicaciones'"
+            (click)="setActiveTab('ubicaciones')">
+            <span class="tab-icon">🗺️</span>
+            <span class="tab-label">{{ 'world.locations' | translate }}</span>
+            <span class="tab-count">{{ubicaciones.length}}</span>
+          </button>
+          <button
+            class="tab-button"
+            [class.active]="activeTab === 'worldbuilding'"
+            (click)="setActiveTab('worldbuilding')">
+            <span class="tab-icon">📚</span>
+            <span class="tab-label">{{ 'world.worldbuilding' | translate }}</span>
+            <span class="tab-count">{{worldbuilding.size}}</span>
+          </button>
+        </nav>
+
+        <!-- Tab Content: UBICACIONES -->
+        @if (activeTab === 'ubicaciones') {
+          <div class="tab-content">
+            <!-- Filtros -->
+            @if (getTiposUbicaciones().length > 1) {
+              <div class="filtros-container">
+                <button
+                  class="filtro-btn"
+                  [class.active]="filtroTipoUbicacion === 'todas'"
+                  (click)="filtrarUbicaciones('todas')">
+                  {{ 'world.all_locations' | translate: {count: ubicaciones.length} }}
+                </button>
+                @for (tipo of getTiposUbicaciones(); track tipo) {
+                  <button
+                    class="filtro-btn"
+                    [class.active]="filtroTipoUbicacion === tipo"
+                    (click)="filtrarUbicaciones(tipo)">
+                    {{traducirTipoUbicacion(tipo)}} ({{contarUbicacionesPorTipo(tipo)}})
+                  </button>
+                }
+              </div>
+            }
+
+            <!-- Grid de Ubicaciones -->
+            @if (ubicacionesFiltradas.length > 0) {
+              <div class="ubicaciones-grid">
+                @for (ubicacion of ubicacionesFiltradas; track ubicacion.slug) {
+                  <article class="ubicacion-card glass-effect">
+                    <!-- Card Header -->
+                    <div class="card-header">
+                      <span class="ubicacion-icon-xl">{{ubicacion.icono || '📍'}}</span>
+                      <div class="card-header-text">
+                        <h3 class="card-title">{{ubicacion.nombre}}</h3>
+                        <span class="tipo-badge">{{ubicacion.tipo}}</span>
+                      </div>
+                      <span class="peligro-badge" [class]="'peligro-' + ubicacion.peligrosidad">
+                        {{getPeligrosidadBadge(ubicacion.peligrosidad)}}
+                      </span>
+                    </div>
+
+                    <!-- Descripción -->
+                    <p class="card-descripcion">{{ubicacion.descripcion_corta}}</p>
+
+                    <!-- Stats Grid -->
+                    <div class="stats-grid">
+                      @if (ubicacion.poblacion > 0) {
+                        <div class="stat-item">
+                          <span class="stat-icon">👥</span>
+                          <div class="stat-info">
+                            <span class="stat-label">{{ 'world.population' | translate }}</span>
+                            <span class="stat-value">{{formatPoblacion(ubicacion.poblacion)}}</span>
+                          </div>
+                        </div>
+                      }
+                      @if (ubicacion['nivel_señal'] > 0) {
+                        <div class="stat-item">
+                          <span class="stat-icon">📶</span>
+                          <div class="stat-info">
+                            <span class="stat-label">{{ 'world.signal' | translate }}</span>
+                            <span class="stat-value">{{ubicacion['nivel_señal']}}/5</span>
+                          </div>
+                        </div>
+                      }
+                      @if (ubicacion.trending_promedio > 0) {
+                        <div class="stat-item">
+                          <span class="stat-icon">🔥</span>
+                          <div class="stat-info">
+                            <span class="stat-label">{{ 'world.trending' | translate }}</span>
+                            <span class="stat-value">{{formatNumber(ubicacion.trending_promedio)}}</span>
+                          </div>
+                        </div>
+                      }
+                    </div>
+
+                    <!-- Botón Ver Más -->
+                    <button class="btn-ver-mas" (click)="abrirModal(ubicacion)">
+                      <span class="btn-icon">👁</span>
+                      {{ 'world.see_more' | translate }}
+                    </button>
+                  </article>
+                }
+              </div>
+            } @else {
+              <div class="empty-state glass-effect">
+                <span class="empty-icon">🗺️</span>
+                <h3 class="empty-title">{{ 'world.no_locations' | translate }}</h3>
+                <p class="empty-text">{{ 'world.try_filter' | translate }}</p>
+              </div>
+            }
+          </div>
+        }
+
+        <!-- Tab Content: WORLDBUILDING -->
+        @if (activeTab === 'worldbuilding') {
+          <div class="tab-content">
+            <!-- Sub-tabs por categoría -->
+            <nav class="sub-tabs-nav">
+              <button
+                class="sub-tab-btn"
+                [class.active]="activeWbCategory === 'sistema'"
+                (click)="setActiveWbCategory('sistema')">
+                {{ 'world.wb_system' | translate }}
+              </button>
+              <button
+                class="sub-tab-btn"
+                [class.active]="activeWbCategory === 'sociedad'"
+                (click)="setActiveWbCategory('sociedad')">
+                {{ 'world.wb_society' | translate }}
+              </button>
+              <button
+                class="sub-tab-btn"
+                [class.active]="activeWbCategory === 'cultura'"
+                (click)="setActiveWbCategory('cultura')">
+                {{ 'world.wb_culture' | translate }}
+              </button>
+              <button
+                class="sub-tab-btn"
+                [class.active]="activeWbCategory === 'biologia'"
+                (click)="setActiveWbCategory('biologia')">
+                {{ 'world.wb_biology' | translate }}
+              </button>
+              <button
+                class="sub-tab-btn"
+                [class.active]="activeWbCategory === 'otros'"
+                (click)="setActiveWbCategory('otros')">
+                {{ 'world.wb_others' | translate }}
+              </button>
+            </nav>
+
+            <!-- Worldbuilding Content -->
+            <div class="worldbuilding-content">
+              @for (tabla of getTablasPorCategoria(activeWbCategory); track tabla) {
+                @if (tieneWorldbuildingData(tabla)) {
+                  <article class="wb-card glass-effect">
+                    <div class="wb-header">
+                      <span class="wb-icon-xl">{{getTableIcon(tabla)}}</span>
+                      <h3 class="wb-title">{{formatTableName(tabla)}}</h3>
+                      <span class="wb-count-badge">{{worldbuilding.get(tabla)?.datos?.length || 0}}</span>
+                    </div>
+
+                    <div class="wb-items-grid">
+                      @for (item of worldbuilding.get(tabla)?.datos || []; track item.id) {
+                        <div class="wb-item">
+                          <h4 class="wb-item-title">
+                            {{item.nombre || item.termino || item.concepto || item.stat_nombre || item.nombre_stat || 'Sin título'}}
+                          </h4>
+
+                          @if (item.definicion_corta || item.descripcion_corta || item.descripcion || item.definicion) {
+                            <p class="wb-item-text">{{item.definicion_corta || item.descripcion_corta || item.descripcion || item.definicion}}</p>
+                          }
+
+                          <!-- Detalles específicos -->
+                          <div class="wb-item-details">
+                            <!-- Conceptos -->
+                            @if (tabla === 'conceptos' && item.ejemplo) {
+                              <div class="wb-detail">
+                                <span class="wb-detail-icon">💡</span>
+                                <span class="wb-detail-text">{{item.ejemplo}}</span>
+                              </div>
+                            }
+
+                            <!-- Sistema Stats -->
+                            @if (tabla === 'sistema_stats') {
+                              @if (item.como_mejorar) {
+                                <div class="wb-detail">
+                                  <span class="wb-detail-icon">📈</span>
+                                  <span class="wb-detail-text">{{item.como_mejorar}}</span>
+                                </div>
+                              }
+                              @if (item.rango_minimo !== null || item.rango_maximo !== null) {
+                                <div class="wb-detail">
+                                  <span class="wb-detail-icon">📊</span>
+                                  <span class="wb-detail-text">Rango: {{item.rango_minimo}} - {{item.rango_maximo}}</span>
+                                </div>
+                              }
+                            }
+
+                            <!-- Jerga -->
+                            @if (tabla === 'jerga' && item.ejemplo_uso) {
+                              <div class="wb-detail ejemplo">
+                                <span class="wb-detail-icon">💬</span>
+                                <span class="wb-detail-text italic">"{{item.ejemplo_uso}}"</span>
+                              </div>
+                            }
+
+                            <!-- Ocupaciones -->
+                            @if (tabla === 'ocupaciones') {
+                              @if (item.salario_promedio_mensual) {
+                                <div class="wb-detail">
+                                  <span class="wb-detail-icon">💰</span>
+                                  <span class="wb-detail-text">{{item.salario_promedio_mensual}} {{item.moneda || 'créditos'}}/mes</span>
+                                </div>
+                              }
+                              @if (item.stats_necesarios) {
+                                <div class="wb-detail">
+                                  <span class="wb-detail-icon">📊</span>
+                                  <span class="wb-detail-text">{{item.stats_necesarios}}</span>
+                                </div>
+                              }
+                            }
+
+                            <!-- Monedas -->
+                            @if (tabla === 'monedas') {
+                              @if (item.simbolo) {
+                                <div class="wb-detail">
+                                  <span class="wb-detail-icon">💱</span>
+                                  <span class="wb-detail-text">{{item.simbolo}}</span>
+                                </div>
+                              }
+                              @if (item.conversion_usd) {
+                                <div class="wb-detail">
+                                  <span class="wb-detail-icon">💵</span>
+                                  <span class="wb-detail-text">1 {{item.simbolo}} ≈ ${{item.conversion_usd}} USD</span>
+                                </div>
+                              }
+                            }
+
+                            <!-- Alimentos/Vivienda/Moda - Precio -->
+                            @if (item.precio_promedio || item.precio_promedio_mensual || item.costo_promedio) {
+                              <div class="wb-detail">
+                                <span class="wb-detail-icon">💰</span>
+                                <span class="wb-detail-text">
+                                  {{item.precio_promedio || item.precio_promedio_mensual || item.costo_promedio}} créditos
+                                </span>
+                              </div>
+                            }
+
+                            <!-- Enfermedades -->
+                            @if (tabla === 'enfermedades') {
+                              @if (item.sintomas) {
+                                <div class="wb-detail">
+                                  <span class="wb-detail-icon">🩺</span>
+                                  <span class="wb-detail-text">{{item.sintomas}}</span>
+                                </div>
+                              }
+                              @if (item.cura) {
+                                <div class="wb-detail">
+                                  <span class="wb-detail-icon">💊</span>
+                                  <span class="wb-detail-text">{{item.cura}}</span>
+                                </div>
+                              }
+                            }
+
+                            <!-- Festividades -->
+                            @if (tabla === 'festividades' && item.fecha) {
+                              <div class="wb-detail">
+                                <span class="wb-detail-icon">📅</span>
+                                <span class="wb-detail-text">{{item.fecha}}</span>
+                              </div>
+                            }
+                          </div>
+                        </div>
+                      }
+                    </div>
+                  </article>
+                }
+              }
+            </div>
+          </div>
+        }
+      </div>
+    }
+  </div>
+</section>
+
+<!-- Modal de Detalles de Ubicación -->
+@if (modalAbierto && ubicacionSeleccionada) {
+  <div class="modal-overlay" (click)="cerrarModal()">
+    <div class="modal-container glass-effect" (click)="$event.stopPropagation()">
+      <!-- Header del Modal -->
+      <div class="modal-header">
+        <div class="modal-title-section">
+          <span class="modal-icon">{{ubicacionSeleccionada.icono}}</span>
+          <h2 class="modal-title">{{ubicacionSeleccionada.nombre}}</h2>
+        </div>
+        <button class="modal-close" (click)="cerrarModal()">✕</button>
+      </div>
+
+      <!-- Contenido del Modal -->
+      <div class="modal-body">
+        <!-- Descripción completa -->
+        @if (ubicacionSeleccionada.descripcion_completa) {
+          <div class="modal-section">
+            <h3 class="modal-section-title">
+              <span class="section-icon">📖</span>
+              Descripción Detallada
+            </h3>
+            <p class="modal-text">{{ubicacionSeleccionada.descripcion_completa}}</p>
+          </div>
+        }
+
+        <!-- Grid de información -->
+        <div class="modal-info-grid">
+          @if (ubicacionSeleccionada.clima) {
+            <div class="modal-info-item">
+              <span class="modal-info-icon">🌤️</span>
+              <div class="modal-info-content">
+                <span class="modal-info-label">Clima</span>
+                <span class="modal-info-value">{{ubicacionSeleccionada.clima}}</span>
+              </div>
+            </div>
+          }
+          @if (ubicacionSeleccionada.habitantes_principales) {
+            <div class="modal-info-item">
+              <span class="modal-info-icon">👥</span>
+              <div class="modal-info-content">
+                <span class="modal-info-label">Habitantes Principales</span>
+                <span class="modal-info-value">{{ubicacionSeleccionada.habitantes_principales}}</span>
+              </div>
+            </div>
+          }
+          @if (ubicacionSeleccionada.controlada_por) {
+            <div class="modal-info-item">
+              <span class="modal-info-icon">⚔️</span>
+              <div class="modal-info-content">
+                <span class="modal-info-label">Controlada Por</span>
+                <span class="modal-info-value">{{ubicacionSeleccionada.controlada_por}}</span>
+              </div>
+            </div>
+          }
+          @if (ubicacionSeleccionada.peligrosidad) {
+            <div class="modal-info-item">
+              <span class="modal-info-icon">⚠️</span>
+              <div class="modal-info-content">
+                <span class="modal-info-label">Peligrosidad</span>
+                <span class="modal-info-value">{{getPeligrosidadBadge(ubicacionSeleccionada.peligrosidad)}}</span>
+              </div>
+            </div>
+          }
+        </div>
+
+        <!-- Enemigos -->
+        @if (ubicacionSeleccionada.enemigos.length > 0) {
+          <div class="modal-section">
+            <h3 class="modal-section-title">
+              <span class="section-icon">💀</span>
+              Enemigos Comunes
+            </h3>
+            <div class="modal-chips">
+              @for (enemigo of ubicacionSeleccionada.enemigos; track enemigo.id) {
+                <span class="modal-chip enemigo-chip" [class]="'tier-' + enemigo.tier.toLowerCase()">
+                  {{enemigo.nombre}}
+                  <span class="tier-label">{{enemigo.tier}}</span>
+                </span>
+              }
+            </div>
+          </div>
+        }
+
+        <!-- Apariciones -->
+        @if (ubicacionSeleccionada.apariciones.length > 0) {
+          <div class="modal-section">
+            <h3 class="modal-section-title">
+              <span class="section-icon">📚</span>
+              Apariciones en Capítulos
+            </h3>
+            <div class="modal-chips">
+              @for (aparicion of ubicacionSeleccionada.apariciones; track aparicion.cap_id) {
+                <span class="modal-chip aparicion-chip" [class.principal]="aparicion.es_principal === 1">
+                  Capítulo {{aparicion.numero}}
+                  @if (aparicion.es_principal === 1) {
+                    <span class="star-icon">⭐</span>
+                  }
+                </span>
+              }
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+}
+
+<!-- Scroll to Top Button -->
+<app-scroll-to-top />

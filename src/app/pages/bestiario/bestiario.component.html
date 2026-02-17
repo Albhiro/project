@@ -1,0 +1,355 @@
+<section class="bestiario-page">
+  <div class="container">
+    <!-- Hero Section -->
+    <div class="bestiario-hero">
+      <h1 class="bestiario-title">{{ 'bestiary.title' | translate }}</h1>
+      <p class="bestiario-subtitle">
+        {{ 'bestiary.intro' | translate }} <strong>{{ 'bestiary.intro_bold' | translate }}</strong>
+      </p>
+    </div>
+
+    <!-- Progress Bar -->
+    <div class="progress-bestiario">
+      <div class="progress-bar-bestiario">
+        <div class="progress-fill" [style.width.%]="progressService.getProgresoTotal()"></div>
+      </div>
+      <div class="progress-info">
+        <p class="progress-text">
+          @if (progressService.getCapituloActual() === 0) {
+            <strong>{{ 'bestiary.pre_launch' | translate }}</strong> · {{ 'bestiary.pre_launch_desc' | translate }}
+          } @else {
+            <strong>{{ 'bestiary.current_chapter' | translate: {number: progressService.getCapituloActual()} }}</strong> · {{ 'bestiary.unlocked_count' | translate: {count: enemigos.length} }}
+          }
+        </p>
+      </div>
+    </div>
+
+    <!-- Loading/Error States -->
+    @if (loading) {
+      <div class="loading-state">
+        <div class="loading-spinner"></div>
+        <p>{{ 'bestiary.loading' | translate }}</p>
+      </div>
+    } @else if (error) {
+      <div class="error-state">
+        <span class="error-icon">⚠️</span>
+        <p class="error-text">{{ 'bestiary.error' | translate }}</p>
+      </div>
+    } @else {
+      <!-- Tabs Container -->
+      <div class="tabs-container">
+        <!-- Main Tabs -->
+        <nav class="tabs-nav">
+          <button
+            class="tab-button"
+            [class.active]="activeTab === 'todos'"
+            (click)="setActiveTab('todos')">
+            <span class="tab-icon">👾</span>
+            <span class="tab-label">{{ 'bestiary.all' | translate }}</span>
+            <span class="tab-count">{{enemigos.length}}</span>
+          </button>
+          @for (tipo of getTiposDisponibles(); track tipo) {
+            <button
+              class="tab-button"
+              [class.active]="activeTab === tipo"
+              (click)="setActiveTabString(tipo)">
+              <span class="tab-icon">{{getIconoPorTipo(tipo)}}</span>
+              <span class="tab-label">{{traducirTipoEnemigo(tipo)}}</span>
+              <span class="tab-count">{{getConteoPorTipo(tipo)}}</span>
+            </button>
+          }
+          <button
+            class="tab-button"
+            [class.active]="activeTab === 'boss'"
+            (click)="setActiveTab('boss')">
+            <span class="tab-icon">💀</span>
+            <span class="tab-label">{{ 'bestiary.bosses' | translate }}</span>
+            <span class="tab-count">{{getConteoPorTipo('boss')}}</span>
+          </button>
+        </nav>
+
+        <!-- Filtros por Tier -->
+        @if (getTiersDisponibles().length > 1) {
+          <div class="filtros-container">
+            <button
+              class="filtro-btn"
+              [class.active]="filtroTier === 'todos'"
+              (click)="setFiltroTier('todos')">
+              {{ 'bestiary.all_tiers' | translate }}
+            </button>
+            @for (tier of getTiersDisponibles(); track tier) {
+              <button
+                class="filtro-btn"
+                [class.active]="filtroTier === tier"
+                (click)="setFiltroTier(tier)">
+                {{ 'bestiary.tier' | translate: {tier: tier} }}
+              </button>
+            }
+          </div>
+        }
+
+        <!-- Grid de Enemigos -->
+        @if (enemigosFiltrados.length > 0) {
+          <div class="enemigos-grid">
+            @for (enemigo of enemigosFiltrados; track enemigo.id) {
+              <article class="enemigo-card glass-effect" [class]="'tipo-' + enemigo.tipo">
+                <!-- Header -->
+                <div class="card-header">
+                  <span class="enemigo-icon-xl">{{getEnemigoIcono(enemigo)}}</span>
+                  <div class="card-header-text">
+                    <h3 class="card-title">{{enemigo.nombre}}</h3>
+                    <span class="tipo-badge">{{traducirTipoEnemigo(enemigo.tipo)}}</span>
+                    <span class="tier-badge" [class]="'tier-' + enemigo.tier.toLowerCase()">
+                      Tier {{enemigo.tier}}
+                    </span>
+                    @if (enemigo.es_boss) {
+                      <span class="boss-badge">BOSS</span>
+                    }
+                  </div>
+                </div>
+
+                <!-- Stats Grid -->
+                <div class="stats-grid">
+                  <div class="stat-item">
+                    <span class="stat-icon">❤️</span>
+                    <div class="stat-info">
+                      <span class="stat-label">{{ 'bestiary.hp' | translate }}</span>
+                      <span class="stat-value">{{formatHP(enemigo.hp ?? enemigo.hp_base ?? 0)}}</span>
+                    </div>
+                  </div>
+                  <div class="stat-item">
+                    <span class="stat-icon">⚔️</span>
+                    <div class="stat-info">
+                      <span class="stat-label">{{ 'bestiary.attack' | translate }}</span>
+                      <span class="stat-value">{{enemigo.ataque}}</span>
+                    </div>
+                  </div>
+                  <div class="stat-item">
+                    <span class="stat-icon">🛡️</span>
+                    <div class="stat-info">
+                      <span class="stat-label">{{ 'bestiary.defense' | translate }}</span>
+                      <span class="stat-value">{{enemigo.defensa}}</span>
+                    </div>
+                  </div>
+                  <div class="stat-item">
+                    <span class="stat-icon">⚡</span>
+                    <div class="stat-info">
+                      <span class="stat-label">{{ 'bestiary.speed' | translate }}</span>
+                      <span class="stat-value">{{enemigo.velocidad}}</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Descripción Corta -->
+                @if (enemigo.descripcion_breve || enemigo.comportamiento) {
+                  <p class="card-descripcion">{{enemigo.descripcion_breve || enemigo.comportamiento}}</p>
+                }
+
+                <!-- Botón Ver Más -->
+                <button class="btn-ver-mas" (click)="abrirModal(enemigo)">
+                  <span class="btn-icon">🔍</span>
+                  {{ 'bestiary.see_details' | translate }}
+                </button>
+              </article>
+            }
+          </div>
+        } @else {
+          <div class="empty-state glass-effect">
+            <span class="empty-icon">👾</span>
+            <h3 class="empty-title">{{ 'bestiary.no_enemies' | translate }}</h3>
+            <p class="empty-text">{{ 'bestiary.try_filter' | translate }}</p>
+          </div>
+        }
+      </div>
+    }
+  </div>
+</section>
+
+<!-- Modal de Detalles de Enemigo -->
+@if (modalAbierto && enemigoSeleccionado) {
+  <div class="modal-overlay" (click)="cerrarModal()">
+    <div class="modal-container glass-effect" (click)="$event.stopPropagation()">
+      <!-- Header del Modal -->
+      <div class="modal-header">
+        <div class="modal-title-section">
+          <span class="modal-icon">{{getEnemigoIcono(enemigoSeleccionado)}}</span>
+          <div>
+            <h2 class="modal-title">{{enemigoSeleccionado.nombre}}</h2>
+            <p class="modal-subtitle">{{ 'bestiary.tier' | translate: {tier: enemigoSeleccionado.tier} }} · {{traducirTipoEnemigo(enemigoSeleccionado.tipo)}}</p>
+          </div>
+        </div>
+        <button class="modal-close" (click)="cerrarModal()">{{ 'bestiary.modal_close' | translate }}</button>
+      </div>
+
+      <!-- Contenido del Modal -->
+      <div class="modal-body">
+        <!-- Stats Completos -->
+        <div class="modal-section">
+          <h3 class="modal-section-title">
+            <span class="section-icon">📊</span>
+            {{ 'bestiary.modal_stats_title' | translate }}
+          </h3>
+          <div class="modal-stats-grid">
+            <div class="modal-stat-item">
+              <span class="modal-stat-icon">❤️</span>
+              <div>
+                <span class="modal-stat-label">{{ 'bestiary.modal_hp_base' | translate }}</span>
+                <span class="modal-stat-value">{{formatHP(enemigoSeleccionado.hp_base)}}</span>
+              </div>
+            </div>
+            <div class="modal-stat-item">
+              <span class="modal-stat-icon">⚔️</span>
+              <div>
+                <span class="modal-stat-label">{{ 'bestiary.attack' | translate }}</span>
+                <span class="modal-stat-value">{{enemigoSeleccionado.ataque}}</span>
+              </div>
+            </div>
+            <div class="modal-stat-item">
+              <span class="modal-stat-icon">🛡️</span>
+              <div>
+                <span class="modal-stat-label">{{ 'bestiary.defense' | translate }}</span>
+                <span class="modal-stat-value">{{enemigoSeleccionado.defensa}}</span>
+              </div>
+            </div>
+            <div class="modal-stat-item">
+              <span class="modal-stat-icon">⚡</span>
+              <div>
+                <span class="modal-stat-label">{{ 'bestiary.speed' | translate }}</span>
+                <span class="modal-stat-value">{{enemigoSeleccionado.velocidad}}</span>
+              </div>
+            </div>
+            <div class="modal-stat-item">
+              <span class="modal-stat-icon">💥</span>
+              <div>
+                <span class="modal-stat-label">{{ 'bestiary.modal_critical' | translate }}</span>
+                <span class="modal-stat-value">{{enemigoSeleccionado.critico}}%</span>
+              </div>
+            </div>
+            <div class="modal-stat-item">
+              <span class="modal-stat-icon">🎯</span>
+              <div>
+                <span class="modal-stat-label">{{ 'bestiary.modal_evasion' | translate }}</span>
+                <span class="modal-stat-value">{{enemigoSeleccionado.evasion}}%</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Descripción Completa -->
+        @if (enemigoSeleccionado.descripcion_completa) {
+          <div class="modal-section">
+            <h3 class="modal-section-title">
+              <span class="section-icon">📖</span>
+              {{ 'bestiary.modal_description' | translate }}
+            </h3>
+            <p class="modal-text">{{enemigoSeleccionado.descripcion_completa}}</p>
+          </div>
+        }
+
+        <!-- Lore -->
+        @if (enemigoSeleccionado.lore) {
+          <div class="modal-section">
+            <h3 class="modal-section-title">
+              <span class="section-icon">📜</span>
+              {{ 'bestiary.modal_lore' | translate }}
+            </h3>
+            <p class="modal-text">{{enemigoSeleccionado.lore}}</p>
+          </div>
+        }
+
+        <!-- Comportamiento -->
+        @if (enemigoSeleccionado.comportamiento) {
+          <div class="modal-section">
+            <h3 class="modal-section-title">
+              <span class="section-icon">🧠</span>
+              {{ 'bestiary.modal_behavior' | translate }}
+            </h3>
+            <p class="modal-text">{{enemigoSeleccionado.comportamiento}}</p>
+          </div>
+        }
+
+        <!-- Táctica de Combate -->
+        @if (enemigoSeleccionado.tactica_combate) {
+          <div class="modal-section">
+            <h3 class="modal-section-title">
+              <span class="section-icon">⚔️</span>
+              {{ 'bestiary.modal_combat_tactics' | translate }}
+            </h3>
+            <p class="modal-text">{{enemigoSeleccionado.tactica_combate}}</p>
+          </div>
+        }
+
+        <!-- Debilidades & Resistencias -->
+        <div class="modal-section">
+          <h3 class="modal-section-title">
+            <span class="section-icon">💡</span>
+            {{ 'bestiary.modal_weaknesses_resistances' | translate }}
+          </h3>
+          <div class="resistencias-grid">
+            @if (enemigoSeleccionado.debilidades) {
+              <div class="resistencia-item debilidad">
+                <h4>❌ {{ 'bestiary.modal_weaknesses' | translate }}</h4>
+                <p>{{enemigoSeleccionado.debilidades}}</p>
+              </div>
+            }
+            @if (enemigoSeleccionado.resistencias) {
+              <div class="resistencia-item resistencia">
+                <h4>🛡️ {{ 'bestiary.modal_resistances' | translate }}</h4>
+                <p>{{enemigoSeleccionado.resistencias}}</p>
+              </div>
+            }
+            @if (enemigoSeleccionado.inmunidades) {
+              <div class="resistencia-item inmunidad">
+                <h4>⚡ {{ 'bestiary.modal_immunities' | translate }}</h4>
+                <p>{{enemigoSeleccionado.inmunidades}}</p>
+              </div>
+            }
+          </div>
+        </div>
+
+        <!-- Info Adicional -->
+        <div class="modal-info-grid">
+          @if (enemigoSeleccionado.nivel_minimo) {
+            <div class="modal-info-item">
+              <span class="modal-info-icon">📊</span>
+              <div>
+                <span class="modal-info-label">{{ 'bestiary.modal_level' | translate }}</span>
+                <span class="modal-info-value">{{enemigoSeleccionado.nivel_minimo}} - {{enemigoSeleccionado.nivel_maximo}}</span>
+              </div>
+            </div>
+          }
+          @if (enemigoSeleccionado.experiencia_drop) {
+            <div class="modal-info-item">
+              <span class="modal-info-icon">⭐</span>
+              <div>
+                <span class="modal-info-label">{{ 'bestiary.modal_exp_drop' | translate }}</span>
+                <span class="modal-info-value">{{enemigoSeleccionado.experiencia_drop}}</span>
+              </div>
+            </div>
+          }
+          @if (enemigoSeleccionado.views_drop) {
+            <div class="modal-info-item">
+              <span class="modal-info-icon">👁️</span>
+              <div>
+                <span class="modal-info-label">{{ 'bestiary.modal_views_drop' | translate }}</span>
+                <span class="modal-info-value">{{enemigoSeleccionado.views_drop}}</span>
+              </div>
+            </div>
+          }
+          @if (enemigoSeleccionado.inteligencia) {
+            <div class="modal-info-item">
+              <span class="modal-info-icon">🧠</span>
+              <div>
+                <span class="modal-info-label">{{ 'bestiary.modal_intelligence' | translate }}</span>
+                <span class="modal-info-value">{{enemigoSeleccionado.inteligencia}}</span>
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+}
+
+<!-- Scroll to Top Button -->
+<app-scroll-to-top />

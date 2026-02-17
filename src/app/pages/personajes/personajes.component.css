@@ -1,0 +1,278 @@
+.personajes-page {
+  padding: 4rem 0;
+}
+
+h1 {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.intro {
+  max-width: 600px;
+  margin: 0 auto 3rem;
+  text-align: center;
+  color: var(--text-muted);
+}
+
+.categoria {
+  margin: 4rem 0;
+}
+
+.categoria h2 {
+  color: var(--cyan);
+  text-shadow: 0 0 10px var(--cyan);
+  margin-bottom: 2rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--cyan);
+}
+
+.personajes-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 2rem;
+}
+
+.personaje-card {
+  background: var(--gray);
+  border: 2px solid var(--text-muted);
+  padding: 2rem;
+  transition: all 0.3s;
+}
+
+.personaje-card:hover {
+  border-color: var(--cyan);
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0, 255, 255, 0.2);
+}
+
+.personaje-card.antagonista {
+  border-color: var(--magenta);
+}
+
+.personaje-card.antagonista:hover {
+  border-color: var(--magenta);
+  box-shadow: 0 8px 24px rgba(255, 0, 255, 0.2);
+}
+
+.personaje-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.personaje-icon {
+  font-size: 3rem;
+  font-family: var(--font-mono);
+}
+
+.personaje-header h3 {
+  margin: 0;
+  color: var(--text);
+}
+
+.personaje-titulo {
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  color: var(--cyan);
+  margin: 0.25rem 0 0;
+}
+
+.personaje-stats {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  background: var(--dark);
+  border-left: 3px solid var(--cyan);
+}
+
+.stat {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+}
+
+.stat-label {
+  color: var(--text-muted);
+}
+
+.stat-value {
+  color: var(--cyan);
+  font-weight: bold;
+}
+
+.personaje-desc {
+  color: var(--text-muted);
+  line-height: 1.6;
+  margin: 0;
+}
+
+.nota-box {
+  margin-top: 4rem;
+  padding: 2rem;
+  background: var(--dark);
+  border: 1px dashed var(--cyan);
+  text-align: center;
+}
+
+.nota-box p {
+  margin: 0;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+}
+
+/* Progress Bar */
+.progress-personajes {
+  margin: 2rem 0 3rem;
+  padding: 1.5rem;
+  background: rgba(0, 255, 255, 0.05);
+  border: 1px solid var(--cyan);
+  border-radius: 4px;
+}
+
+.progress-bar-personajes {
+  width: 100%;
+  height: 8px;
+  background: rgba(0, 255, 255, 0.1);
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 0.75rem;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--cyan), var(--magenta));
+  transition: width 0.5s ease;
+  box-shadow: 0 0 10px var(--cyan);
+}
+
+.progress-text {
+  text-align: center;
+  margin: 0 0 0.5rem 0;
+  font-size: 0.95rem;
+  color: var(--cyan);
+}
+
+.aviso-spoilers {
+  text-align: center;
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--magenta);
+  font-style: italic;
+  padding: 0.5rem;
+  background: rgba(255, 0, 255, 0.05);
+  border-radius: 4px;
+}
+
+/* Locked Cards */
+.personaje-card.locked-card {
+  position: relative;
+  opacity: 0.6;
+  filter: grayscale(0.5);
+  border-color: var(--text-muted);
+}
+
+.personaje-card.locked-card:hover {
+  opacity: 0.7;
+  transform: none;
+  box-shadow: none;
+  border-color: var(--magenta);
+}
+
+.personaje-card.locked-card .personaje-desc {
+  filter: blur(4px);
+  user-select: none;
+}
+
+.unlock-banner {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  font-size: 0.75rem;
+  padding: 0.4rem 0.8rem;
+  background: rgba(255, 0, 255, 0.2);
+  border: 1px solid var(--magenta);
+  border-radius: 3px;
+  color: var(--magenta);
+  font-weight: bold;
+  z-index: 10;
+}
+
+/* Complete Lock - Placeholder Cards */
+.locked-placeholder {
+  border: 2px dashed var(--magenta);
+  background: rgba(255, 0, 255, 0.03);
+  opacity: 0.7;
+  min-height: 250px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  cursor: not-allowed;
+}
+
+.locked-placeholder:hover {
+  opacity: 0.85;
+  border-color: var(--cyan);
+  transform: none;
+  box-shadow: 0 0 15px rgba(0, 255, 255, 0.2);
+}
+
+.locked-content-full {
+  text-align: center;
+  width: 100%;
+}
+
+.lock-icon-big {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  opacity: 0.6;
+  animation: pulse-lock 3s infinite;
+}
+
+@keyframes pulse-lock {
+  0%, 100% { opacity: 0.4; transform: scale(1); }
+  50% { opacity: 0.7; transform: scale(1.1); }
+}
+
+.locked-title {
+  color: var(--magenta);
+  font-size: 1.3rem;
+  font-style: italic;
+  margin: 0.5rem 0;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.locked-subtitle {
+  color: var(--cyan);
+  font-size: 0.9rem;
+  margin: 0.5rem 0 1rem 0;
+  font-weight: bold;
+}
+
+.mystery-icon {
+  font-size: 4rem;
+  opacity: 0.3;
+  margin-top: 1rem;
+  filter: grayscale(1);
+}
+
+@media (max-width: 768px) {
+  .personajes-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .progress-personajes {
+    padding: 1rem;
+  }
+
+  .unlock-banner {
+    font-size: 0.7rem;
+    padding: 0.3rem 0.6rem;
+  }
+}
+

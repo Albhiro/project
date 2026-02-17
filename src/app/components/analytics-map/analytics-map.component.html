@@ -1,0 +1,201 @@
+<section class="analytics-map">
+  <!-- HEADER -->
+  <header class="analytics-header">
+    <h2>{{ 'analytics.header.title' | translate }}</h2>
+    <p class="subtitle">{{ 'analytics.header.subtitle' | translate }}</p>
+
+    <!-- Selector de período -->
+    <div class="period-selector">
+      <button
+        *ngFor="let period of availablePeriods"
+        [class.active]="selectedPeriod === period.id"
+        (click)="changePeriod(period.id)">
+        {{ period.translationKey | translate }}
+      </button>
+    </div>
+  </header>
+
+  <!-- LOADING STATE -->
+  <div *ngIf="loading" class="loading-state">
+    <div class="spinner"></div>
+    <p>{{ 'common.loading' | translate }}</p>
+  </div>
+
+  <!-- ERROR STATE -->
+  <div *ngIf="error && !loading" class="error-state">
+    <p>⚠️ {{ 'common.error' | translate }}</p>
+    <p class="hint">El sistema de analytics aún no ha recopilado datos suficientes</p>
+  </div>
+
+  <!-- MAIN CONTENT -->
+  <div *ngIf="analytics && !loading && !error" class="analytics-content">
+
+    <!-- RESUMEN GENERAL -->
+    <div class="stats-summary">
+      <div class="stat-card">
+        <div class="stat-icon">👁️</div>
+        <div class="stat-value">{{ formatNumber(analytics.totalViews) }}</div>
+        <div class="stat-label">{{ 'analytics.stats.totalViews' | translate }}</div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon">👤</div>
+        <div class="stat-value">{{ formatNumber(analytics.uniqueVisitors) }}</div>
+        <div class="stat-label">{{ 'analytics.stats.uniqueVisitors' | translate }}</div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon">📖</div>
+        <div class="stat-value">{{ analytics.topPages.length }}</div>
+        <div class="stat-label">{{ 'analytics.stats.chaptersRead' | translate }}</div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon">🖥️</div>
+        <div class="stat-value">{{ analytics.totalViews > 0 ? ((analytics.deviceBreakdown.desktop / analytics.totalViews) * 100).toFixed(0) : 0 }}%</div>
+        <div class="stat-label">{{ 'analytics.stats.desktop' | translate }}</div>
+      </div>
+    </div>
+
+    <!-- TOP CAPÍTULOS -->
+    <div class="routes-section">
+      <h3>{{ 'analytics.sections.topChapters' | translate }}</h3>
+
+      <div *ngIf="analytics.topPages && analytics.topPages.length > 0" class="routes-list">
+        <div class="route-item" *ngFor="let page of analytics.topPages; let i = index">
+          <div class="route-rank">{{ i + 1 }}</div>
+          <div class="route-info">
+            <div class="route-path">{{ page.route }}</div>
+            <div class="route-stats">
+              <span class="route-views">{{ formatNumber(page.views) }} {{ 'analytics.units.views' | translate }}</span>
+              <span class="route-percentage">{{ analytics.totalViews > 0 ? ((page.views / analytics.totalViews) * 100).toFixed(1) : 0 }}{{ 'analytics.units.percentage' | translate }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="!analytics.topPages || analytics.topPages.length === 0" class="empty-state">
+        <p>📭 {{ 'analytics.empty.noDataChapters' | translate }}</p>
+      </div>
+    </div>
+
+    <!-- PAÍSES Y IDIOMAS -->
+    <div class="countries-languages-grid">
+
+      <!-- PAÍSES -->
+      <div class="countries-section">
+        <h3>{{ 'analytics.sections.countries' | translate }}</h3>
+
+        <div *ngIf="analytics.topCountries && analytics.topCountries.length > 0" class="countries-list">
+          <div class="country-item" *ngFor="let country of analytics.topCountries.slice(0, 10)">
+            <div class="country-flag">{{ getCountryFlag(country.country) }}</div>
+            <div class="country-info">
+              <div class="country-name">{{ getCountryName(country.country) }}</div>
+              <div class="country-stats">
+                <span class="country-views">{{ formatNumber(country.views) }} {{ 'analytics.units.views' | translate }}</span>
+                <span class="country-percentage">{{ country.percentage }}{{ 'analytics.units.percentage' | translate }}</span>
+              </div>
+            </div>
+            <div class="country-bar">
+              <div class="country-bar-fill" [style.width.%]="country.percentage"></div>
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="!analytics.topCountries || analytics.topCountries.length === 0" class="empty-state">
+          <p>📭 {{ 'analytics.empty.noDataCountries' | translate }}</p>
+        </div>
+      </div>
+
+      <!-- IDIOMAS -->
+      <div class="languages-section">
+        <h3>{{ 'analytics.sections.languages' | translate }}</h3>
+
+        <div *ngIf="analytics.topLanguages && analytics.topLanguages.length > 0" class="languages-list">
+          <div class="language-item" *ngFor="let lang of analytics.topLanguages.slice(0, 10)">
+            <div class="language-info">
+              <div class="language-name">{{ getLanguageName(lang.language) }}</div>
+              <div class="language-code">{{ lang.language }}</div>
+            </div>
+            <div class="language-stats">
+              <span class="language-views">{{ formatNumber(lang.views) }} {{ 'analytics.units.views' | translate }}</span>
+              <span class="language-percentage">{{ lang.percentage }}{{ 'analytics.units.percentage' | translate }}</span>
+            </div>
+            <div class="language-bar">
+              <div class="language-bar-fill" [style.width.%]="lang.percentage"></div>
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="!analytics.topLanguages || analytics.topLanguages.length === 0" class="empty-state">
+          <p>📭 {{ 'analytics.empty.noDataLanguages' | translate }}</p>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- DISPOSITIVOS -->
+    <div class="devices-section">
+      <h3>{{ 'analytics.sections.devices' | translate }}</h3>
+
+      <div class="devices-grid">
+        <div class="device-card">
+          <div class="device-icon">🖥️</div>
+          <div class="device-label">{{ 'analytics.devices.desktop' | translate }}</div>
+          <div class="device-count">{{ formatNumber(analytics.deviceBreakdown.desktop) }}</div>
+          <div class="device-percentage">{{ analytics.totalViews > 0 ? ((analytics.deviceBreakdown.desktop / analytics.totalViews) * 100).toFixed(1) : 0 }}{{ 'analytics.units.percentage' | translate }}</div>
+          <div class="device-bar">
+            <div class="device-bar-fill" [style.width.%]="analytics.totalViews > 0 ? (analytics.deviceBreakdown.desktop / analytics.totalViews) * 100 : 0"></div>
+          </div>
+        </div>
+
+        <div class="device-card">
+          <div class="device-icon">📱</div>
+          <div class="device-label">{{ 'analytics.devices.mobile' | translate }}</div>
+          <div class="device-count">{{ formatNumber(analytics.deviceBreakdown.mobile) }}</div>
+          <div class="device-percentage">{{ analytics.totalViews > 0 ? ((analytics.deviceBreakdown.mobile / analytics.totalViews) * 100).toFixed(1) : 0 }}{{ 'analytics.units.percentage' | translate }}</div>
+          <div class="device-bar">
+            <div class="device-bar-fill" [style.width.%]="analytics.totalViews > 0 ? (analytics.deviceBreakdown.mobile / analytics.totalViews) * 100 : 0"></div>
+          </div>
+        </div>
+
+        <div class="device-card">
+          <div class="device-icon">📲</div>
+          <div class="device-label">{{ 'analytics.devices.tablet' | translate }}</div>
+          <div class="device-count">{{ formatNumber(analytics.deviceBreakdown.tablet) }}</div>
+          <div class="device-percentage">{{ analytics.totalViews > 0 ? ((analytics.deviceBreakdown.tablet / analytics.totalViews) * 100).toFixed(1) : 0 }}{{ 'analytics.units.percentage' | translate }}</div>
+          <div class="device-bar">
+            <div class="device-bar-fill" [style.width.%]="analytics.totalViews > 0 ? (analytics.deviceBreakdown.tablet / analytics.totalViews) * 100 : 0"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- GRÁFICO DE TENDENCIA DIARIA -->
+    <div class="daily-chart-section" *ngIf="analytics.dailyViews && analytics.dailyViews.length > 0">
+      <h3>{{ 'analytics.sections.dailyTrend' | translate }}</h3>
+
+      <div class="chart-container">
+        <div class="chart-bar" *ngFor="let day of analytics.dailyViews">
+          <div class="bar-fill"
+               [style.height.%]="getBarHeight(day.views)"
+               [title]="day.date + ': ' + formatNumber(day.views) + ' ' + ('analytics.units.views' | translate)">
+          </div>
+          <div class="bar-label">{{ formatShortDate(day.date) }}</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="analytics-footer">
+      <p class="last-updated" *ngIf="globalStats?.lastUpdated">
+        🕐 {{ 'analytics.footer.lastUpdated' | translate }}: {{ formatDate(globalStats.lastUpdated) }}
+      </p>
+
+      <p class="transparency-note">
+        {{ 'analytics.footer.transparencyNote' | translate }}
+      </p>
+    </footer>
+
+  </div>
+</section>

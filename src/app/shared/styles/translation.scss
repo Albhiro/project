@@ -1,0 +1,248 @@
+/* ============================================
+   SELECCIÓN DE TEXTO PARA TRADUCCIONES
+   ============================================ */
+
+/* Indicador visual de que el texto es seleccionable */
+.selectable-translation {
+  cursor: text;
+  user-select: text;
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+}
+
+/* Estilo de selección personalizado */
+.selectable-translation::selection {
+  background: rgba(0, 255, 0, 0.3);
+  color: #fff;
+}
+
+.selectable-translation::-moz-selection {
+  background: rgba(0, 255, 0, 0.3);
+  color: #fff;
+}
+
+/* ============================================
+   TOOLTIP DE TRADUCCIÓN
+   ============================================ */
+
+.translation-tooltip {
+  position: fixed;
+  background: linear-gradient(135deg, #00ff00 0%, #00cc00 100%);
+  border: 2px solid #000;
+  border-radius: 8px;
+  padding: 0;
+  box-shadow: 
+    0 4px 12px rgba(0, 0, 0, 0.3),
+    0 0 20px rgba(0, 255, 0, 0.4);
+  animation: tooltip-appear 0.2s ease;
+  z-index: 9999;
+}
+
+@keyframes tooltip-appear {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -100%) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -100%) scale(1);
+  }
+}
+
+.translation-tooltip .btn-suggest-translation {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: transparent;
+  border: none;
+  padding: 0.75rem 1.25rem;
+  color: #000;
+  font-family: 'Courier New', monospace;
+  font-size: 0.9rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.translation-tooltip .btn-suggest-translation:hover {
+  background: rgba(0, 0, 0, 0.1);
+  transform: scale(1.05);
+}
+
+.translation-tooltip .btn-suggest-translation .icon {
+  font-size: 1.1rem;
+}
+
+/* Flecha del tooltip */
+.translation-tooltip::after {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-top: 10px solid #00cc00;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+}
+
+/* ============================================
+   AVISO DE TRADUCCIÓN AUTOMÁTICA
+   ============================================ */
+
+.translation-warning {
+  background: linear-gradient(135deg, #ff6600 0%, #ff3300 100%);
+  border: 2px solid #000;
+  border-radius: 8px;
+  padding: 1rem 1.5rem;
+  margin-bottom: 2rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  box-shadow: 
+    0 4px 12px rgba(0, 0, 0, 0.3),
+    0 0 20px rgba(255, 102, 0, 0.3);
+  animation: warning-pulse 2s ease-in-out infinite;
+}
+
+@keyframes warning-pulse {
+  0%, 100% {
+    box-shadow: 
+      0 4px 12px rgba(0, 0, 0, 0.3),
+      0 0 20px rgba(255, 102, 0, 0.3);
+  }
+  50% {
+    box-shadow: 
+      0 4px 12px rgba(0, 0, 0, 0.3),
+      0 0 30px rgba(255, 102, 0, 0.5);
+  }
+}
+
+.translation-warning .icon {
+  font-size: 2rem;
+  flex-shrink: 0;
+}
+
+.translation-warning .content {
+  flex: 1;
+}
+
+.translation-warning h4 {
+  margin: 0 0 0.5rem 0;
+  color: #000;
+  font-family: 'Courier New', monospace;
+  font-size: 1.1rem;
+  text-transform: uppercase;
+}
+
+.translation-warning p {
+  margin: 0;
+  color: #000;
+  font-family: 'Courier New', monospace;
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+.translation-warning .badge {
+  display: inline-block;
+  background: #000;
+  color: #ff6600;
+  padding: 0.25rem 0.75rem;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  font-weight: bold;
+  margin-left: 0.5rem;
+}
+
+/* ============================================
+   SELECTOR DE IDIOMA
+   ============================================ */
+
+.language-selector {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+  border: 2px solid #00ff00;
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 0 20px rgba(0, 255, 0, 0.2);
+}
+
+.language-selector label {
+  color: #00ff00;
+  font-family: 'Courier New', monospace;
+  font-size: 0.9rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  margin: 0;
+}
+
+.language-selector select {
+  flex: 1;
+  background: #0a0a0a;
+  border: 2px solid #333;
+  border-radius: 4px;
+  padding: 0.5rem 1rem;
+  color: #e0e0e0;
+  font-family: 'Courier New', monospace;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  appearance: none;
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="8"><path fill="%2300ff00" d="M0 0l6 8 6-8z"/></svg>');
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  padding-right: 2.5rem;
+}
+
+.language-selector select:hover {
+  border-color: #00ff00;
+}
+
+.language-selector select:focus {
+  outline: none;
+  border-color: #00ff00;
+  box-shadow: 0 0 10px rgba(0, 255, 0, 0.3);
+}
+
+.language-selector option {
+  background: #0a0a0a;
+  color: #e0e0e0;
+  padding: 0.5rem;
+}
+
+.language-selector .progress {
+  font-size: 0.8rem;
+  color: #888;
+  white-space: nowrap;
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+
+@media (max-width: 768px) {
+  .translation-warning {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .language-selector {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .language-selector label {
+    text-align: center;
+  }
+
+  .language-selector select {
+    width: 100%;
+  }
+}

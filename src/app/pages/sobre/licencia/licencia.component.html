@@ -1,0 +1,175 @@
+<section class="licencia-page">
+  <div class="container">
+    <article class="documento-legal">
+      <div class="doc-header">
+        <div class="doc-stamp stamp-legal">{{ 'license.stamp' | translate }}</div>
+        <h1>{{ 'license.title' | translate }}</h1>
+        <div class="doc-subtitle">{{ 'license.subtitle' | translate:{ year: currentYear } }}</div>
+      </div>
+
+      <!-- COPYRIGHT PRINCIPAL -->
+      <section class="seccion-legal">
+        <h2 class="seccion-titulo">{{ 'license.copyright_title' | translate }}</h2>
+
+        <div class="copyright-notice">
+          <p class="copyright-text">
+            <strong>{{ 'license.copyright_text' | translate:{ year: currentYear } }}</strong>
+            <br>{{ 'license.copyright_reserved' | translate }}
+          </p>
+          <p>
+            {{ 'license.copyright_desc' | translate }}
+          </p>
+        </div>
+      </section>
+
+      <!-- LICENCIA DEL CONTENIDO -->
+      <section class="seccion-legal">
+        <h2 class="seccion-titulo">{{ 'license.content_license_title' | translate }}</h2>
+
+        <div class="licencia-item prohibicion">
+          <div class="licencia-icon">❌</div>
+          <div class="licencia-contenido">
+            <h3>{{ 'license.prohibitions_title' | translate }}</h3>
+            <ul class="lista-legal">
+              <li><strong>{{ 'license.prohibitions_commercial' | translate }}</strong></li>
+              <li><strong>{{ 'license.prohibitions_derivative' | translate }}</strong></li>
+              <li><strong>{{ 'license.prohibitions_redistribution' | translate }}</strong></li>
+              <li><strong>{{ 'license.prohibitions_attribution' | translate }}</strong></li>
+              <li><strong>{{ 'license.prohibitions_plagiarism' | translate }}</strong></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="licencia-item permiso">
+          <div class="licencia-icon">✅</div>
+          <div class="licencia-contenido">
+            <h3>{{ 'license.permissions_title' | translate }}</h3>
+            <ul class="lista-legal">
+              <li><strong>{{ 'license.permissions_reading' | translate }}</strong></li>
+              <li><strong>{{ 'license.permissions_sharing' | translate }}</strong></li>
+              <li><strong>{{ 'license.permissions_quotes' | translate }}</strong></li>
+              <li><strong>{{ 'license.permissions_reviews' | translate }}</strong></li>
+              <li><strong>{{ 'license.permissions_fanart' | translate }}</strong></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="licencia-item advertencia">
+          <div class="licencia-icon">⚠️</div>
+          <div class="licencia-contenido">
+            <h3>{{ 'license.gray_zone_title' | translate }}</h3>
+            <ul class="lista-legal">
+              <li><strong>{{ 'license.gray_fanfiction' | translate }}</strong></li>
+              <li><strong>{{ 'license.gray_podcasts' | translate }}</strong></li>
+              <li><strong>{{ 'license.gray_translations' | translate }}</strong></li>
+              <li><strong>{{ 'license.gray_adaptations' | translate }}</strong></li>
+              <li><strong>{{ 'license.gray_merch' | translate }}</strong></li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- LICENCIA DEL CÓDIGO -->
+      <section class="seccion-legal">
+        <h2 class="seccion-titulo">{{ 'license.code_license_title' | translate }}</h2>
+
+        <div class="codigo-licencia">
+          <p>
+            {{ 'license.code_desc' | translate }}
+          </p>
+
+          <div class="mit-license">
+            <h4>{{ 'license.code_mit_title' | translate }}</h4>
+            <code class="license-text">
+{{ 'license.code_mit_text' | translate:{ year: currentYear } }}
+            </code>
+          </div>
+
+          <div class="nota-importante">
+            {{ 'license.code_note' | translate }}
+          </div>
+        </div>
+      </section>      <!-- ENFORCEMENT -->
+      <section class="seccion-legal">
+        <h2 class="seccion-titulo">{{ 'license.enforcement_title' | translate }}</h2>
+
+        <div class="enforcement-box">
+          <h3>{{ 'license.enforcement_subtitle' | translate }}</h3>
+          <p>
+            {{ 'license.enforcement_intro' | translate }}
+          </p>
+          <ul class="lista-legal">
+            <li><strong>{{ 'license.enforcement_dmca' | translate }}</strong></li>
+            <li><strong>{{ 'license.enforcement_contact' | translate }}</strong></li>
+            <li><strong>{{ 'license.enforcement_legal' | translate }}</strong></li>
+          </ul>
+
+          <div class="contact-enforcement">
+            <p>
+              <strong>{{ 'license.enforcement_report' | translate }}</strong>
+              <br><a routerLink="/sobre">{{ 'license.enforcement_contact_link' | translate }}</a>
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- CLARIFICACIONES -->
+      <section class="seccion-legal">
+        <h2 class="seccion-titulo">{{ 'license.faq_title' | translate }}</h2>
+
+        <div class="faq-item">
+          <h4>{{ 'license.faq_podcast_q' | translate }}</h4>
+          <p>
+            <strong>{{ 'license.faq_podcast_a_non' | translate }}</strong>
+            <br><strong>{{ 'license.faq_podcast_a_mon' | translate }}</strong>
+          </p>
+        </div>
+
+        <div class="faq-item">
+          <h4>{{ 'license.faq_translate_q' | translate }}</h4>
+          <p>
+            {{ 'license.faq_translate_a' | translate }}
+          </p>
+        </div>
+
+        <div class="faq-item">
+          <h4>{{ 'license.faq_code_q' | translate }}</h4>
+          <p>
+            {{ 'license.faq_code_a' | translate }}
+          </p>
+        </div>
+
+        <div class="faq-item">
+          <h4>{{ 'license.faq_fanart_q' | translate }}</h4>
+          <p>
+            <strong>{{ 'license.faq_fanart_a_personal' | translate }}</strong>
+            <br><strong>{{ 'license.faq_fanart_a_commercial' | translate }}</strong>
+          </p>
+        </div>
+
+        <div class="faq-item">
+          <h4>{{ 'license.faq_characters_q' | translate }}</h4>
+          <p>
+            {{ 'license.faq_characters_a' | translate }}
+          </p>
+        </div>
+      </section>
+
+      <!-- FOOTER LEGAL -->
+      <div class="legal-footer">
+        <p class="footer-disclaimer">
+          {{ 'license.footer_disclaimer' | translate }}
+        </p>
+        <div class="footer-hash">
+          <code>{{ 'license.footer_hash' | translate }}</code>
+        </div>
+      </div>
+
+      <div class="nav-footer">
+        <a routerLink="/sobre" class="btn-back">{{ 'license.back_button' | translate }}</a>
+      </div>
+    </article>
+  </div>
+</section>
+
+<app-scroll-to-top />

@@ -1,0 +1,136 @@
+<section class="capitulos-index">
+  <div class="container">
+    <h1>{{ 'chapters.title' | translate }}</h1>
+    <p class="subtitle">{{ 'chapters.subtitle' | translate }}</p>
+
+    <!-- Loading State -->
+    @if (loading) {
+      <div class="loading-state">
+        <div class="spinner"></div>
+        <p>{{ 'chapters.loading' | translate }}</p>
+      </div>
+    }
+
+    <!-- Error State -->
+    @if (error) {
+      <div class="error-state">
+        <p>{{ 'chapters.error_prefix' | translate }} {{error}}</p>
+      </div>
+    }
+
+    <!-- Content (solo si no hay loading ni error) -->
+    @if (!loading && !error) {
+      <!-- Progress Bar Global -->
+      <div class="progress-bar">
+        <div class="progress-fill" [style.width.%]="progreso"></div>
+      </div>
+      <p class="progress-text">{{capitulosPublicados}}/{{totalCapitulos}} {{ 'chapters.published' | translate }}</p>
+
+      <!-- Tabs de Volúmenes -->
+      <div class="volumenes-tabs">
+        <div class="tabs-header">
+          @for (vol of volumenes; track vol.numero) {
+            <button
+              class="tab-button"
+              [class.active]="selectedVolumen === vol.numero"
+              [style.--tab-color]="vol.color_tema"
+              (click)="selectVolumen(vol.numero)">
+              <span class="tab-numero">{{ 'chapters.vol_prefix' | translate }} {{vol.numero}}</span>
+              <span class="tab-titulo">{{vol.titulo}}</span>
+              <span class="tab-rango">{{vol.rango}}</span>
+              @if (vol.estado === 'publicacion') {
+                <span class="tab-badge">⚡</span>
+              }
+            </button>
+          }
+        </div>
+
+      <div class="tabs-content">
+        @for (vol of volumenes; track vol.numero) {
+          @if (selectedVolumen === vol.numero) {
+            <div class="tab-panel">
+              <!-- Header del Volumen -->
+              <div class="volumen-header" [style.--volumen-color]="vol.color_tema">
+                <div class="volumen-info">
+                  <h2>{{vol.titulo}}</h2>
+                  <p class="volumen-subtitulo">{{vol.subtitulo}}</p>
+                  <p class="volumen-meta">{{ 'chapters.title' | translate }} {{vol.rango}} ·
+                    @if (vol.estado === 'publicacion') {
+                      <span class="estado-publicacion">{{ 'chapters.in_publication' | translate }}</span>
+                    } @else {
+                      <span class="estado-planificacion">{{ 'chapters.in_planning' | translate }}</span>
+                    }
+                  </p>
+                </div>
+                <!-- Progress del Volumen -->
+                <div class="volumen-progress">
+                  <div class="progress-circle">
+                    <svg viewBox="0 0 36 36">
+                      <path
+                        class="circle-bg"
+                        d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                      />
+                      <path
+                        class="circle-progress"
+                        [style.stroke]="vol.color_tema"
+                        [attr.stroke-dasharray]="getProgresoVolumen(vol.numero) + ', 100'"
+                        d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                      />
+                      <text x="18" y="20.5" class="progress-text">{{getProgresoVolumen(vol.numero) | number:'1.0-0'}}%</text>
+                    </svg>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Lista de Capítulos -->
+              <div class="capitulos-list">
+                @for (cap of getCapitulosDelVolumen(vol.numero); track cap.numero) {
+                  <div class="capitulo-card" [class.publicado]="cap.publicado" [class.bloqueado]="!cap.publicado">
+                    <div class="capitulo-header">
+                      <span class="capitulo-icon">{{cap.icono}}</span>
+                      <div class="capitulo-info">
+                        <h4>
+                          @if (cap.publicado) {
+                            <a [routerLink]="['/capitulos', vol.numero, cap.numero]">
+                              {{ 'chapters.chapter' | translate }} {{cap.numero}} - {{cap.titulo}}
+                            </a>
+                          } @else {
+                            <span class="titulo-bloqueado">{{ 'chapters.chapter' | translate }} {{cap.numero}} - {{cap.titulo}}</span>
+                          }
+                        </h4>
+                        <p class="capitulo-meta">
+                          {{cap.fecha}}
+                          @if (cap.minutos > 0) {
+                            <span> · {{cap.minutos}} {{ 'chapters.min_read' | translate }}</span>
+                          }
+                          @if (cap.palabras > 0) {
+                            <span> · {{cap.palabras}} {{ 'chapters.words' | translate }}</span>
+                          }
+                        </p>
+                      </div>
+                      @if (!cap.publicado) {
+                        <span class="lock-icon">🔒</span>
+                      }
+                    </div>
+
+                    @if (cap.excerpt && cap.publicado) {
+                      <p class="capitulo-excerpt">{{cap.excerpt}}</p>
+                    }
+
+                    @if (!cap.publicado) {
+                      <span class="coming-soon">{{ 'chapters.coming_soon' | translate }}</span>
+                    }
+                  </div>
+                }
+              </div>
+            </div>
+          }
+        }
+      </div>
+      </div>
+    }
+  </div>
+</section>
+
+<!-- Scroll to Top Button -->
+<app-scroll-to-top />

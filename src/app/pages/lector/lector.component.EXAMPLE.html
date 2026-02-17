@@ -1,0 +1,88 @@
+<!-- Loading State -->
+<div class="loading-container" *ngIf="loading">
+  <div class="loading-spinner">⏳</div>
+  <p>Cargando capítulo...</p>
+</div>
+
+<!-- Error State -->
+<div class="error-container" *ngIf="error && !loading">
+  <div class="error-icon">❌</div>
+  <h2>Error</h2>
+  <p>{{ error }}</p>
+  <button class="btn btn-primary" (click)="loadChapter()">Reintentar</button>
+</div>
+
+<!-- Chapter Content -->
+<div class="lector-container" *ngIf="chapter && !loading && !error">
+  
+  <!-- Selector de idioma -->
+  <div class="language-selector">
+    <label>🌍 Idioma:</label>
+    <select [(ngModel)]="currentLanguage" (change)="changeLanguage(currentLanguage)">
+      <option *ngFor="let idioma of idiomas" [value]="idioma.codigo">
+        {{ idioma.emoji }} {{ idioma.nombre_nativo }}
+        ({{ idioma.porcentaje }}% traducido)
+      </option>
+    </select>
+  </div>
+
+  <!-- Aviso de traducción automática -->
+  <div class="translation-warning" *ngIf="needsReview()">
+    <div class="icon">⚠️</div>
+    <div class="content">
+      <h4>Traducción automática</h4>
+      <p>
+        {{ getTranslationMethod() }}
+        <span class="badge" *ngIf="chapter.traduccion_info?.calidad_score">
+          {{ getQualityScore() }}% confianza
+        </span>
+      </p>
+      <p><strong>¡Ayúdanos a mejorarla!</strong> Selecciona texto con errores y sugiere correcciones.</p>
+    </div>
+  </div>
+
+  <!-- Contenido del capítulo -->
+  <article class="chapter-content">
+    <header class="chapter-header">
+      <h1>{{ chapter.titulo }}</h1>
+      <p class="chapter-meta">
+        Capítulo {{ chapter.numero }} • {{ chapter.minutos_lectura }} min lectura
+      </p>
+    </header>
+
+    <!-- Cuerpo del capítulo con selección activa -->
+    <div 
+      class="chapter-body"
+      appSelectableTranslation
+      [currentLanguage]="chapter.idioma"
+      [enabledLanguages]="['en', 'ja', 'pt', 'fr']"
+      (textSelected)="onTextSelected($event)"
+      [innerHTML]="chapter.contenido_html | safeHtml"
+    ></div>
+
+    <!-- Navegación entre capítulos -->
+    <footer class="chapter-navigation" *ngIf="chapter.navegacion">
+      <a 
+        *ngIf="chapter.navegacion.anterior" 
+        [routerLink]="['/lector', chapter.navegacion.anterior.slug]"
+        class="btn btn-nav btn-prev"
+      >
+        ← Anterior: {{ chapter.navegacion.anterior.titulo }}
+      </a>
+      <a 
+        *ngIf="chapter.navegacion.siguiente" 
+        [routerLink]="['/lector', chapter.navegacion.siguiente.slug]"
+        class="btn btn-nav btn-next"
+      >
+        Siguiente: {{ chapter.navegacion.siguiente.titulo }} →
+      </a>
+    </footer>
+  </article>
+</div>
+
+<!-- Modal de feedback de traducción -->
+<app-translation-feedback-dialog
+  [visible]="showFeedbackModal"
+  [data]="feedbackData"
+  (closed)="onModalClosed($event)"
+></app-translation-feedback-dialog>

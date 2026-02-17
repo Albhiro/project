@@ -1,0 +1,99 @@
+<section class="lector-page" [class.modo-enfocado]="modoEnfocado">
+
+  <!-- Barra de Auto-Scroll (Fixed) -->
+  <div class="autoscroll-bar" *ngIf="!cargando">
+    <div class="progress-fill" [style.width.%]="progreso"></div>
+    <div class="autoscroll-controls">
+      <!-- Estado y Tiempo -->
+      <div class="control-group left">
+        <button class="btn-volver-mini" (click)="volverAlIndice()" [title]="'reader.tooltip_back' | translate">
+          {{ 'reader.back_to_index' | translate }}
+        </button>
+        <span class="stat separator">·</span>
+        <span class="stat estado">{{ estadoTexto }}</span>
+        <span class="stat separator">·</span>
+        <span class="stat">⏱ {{ tiempoLectura }}</span>
+        <span class="stat separator">·</span>
+        <span class="stat progreso-num">{{ progreso }}%</span>
+      </div>
+
+      <!-- Controles de reproducción -->
+      <div class="control-group center">
+        <button
+          class="control-btn"
+          [class.active]="autoScrollActivo"
+          (click)="toggleAutoScroll()"
+          [title]="'reader.tooltip_play_pause' | translate">
+          <span *ngIf="!autoScrollActivo">{{ 'reader.play' | translate }}</span>
+          <span *ngIf="autoScrollActivo">{{ 'reader.pause' | translate }}</span>
+        </button>
+      </div>
+
+      <!-- Velocidad con Slider -->
+      <div class="control-group right">
+        <span class="velocity-label">{{ velocidadLabel }}</span>
+        <input
+          type="range"
+          class="velocity-slider"
+          min="0.5"
+          max="4"
+          step="0.1"
+          [value]="velocidadScroll"
+          (input)="onSliderChange($event)"
+          [title]="'reader.tooltip_speed' | translate">
+        <span class="stat wpm">{{ velocidadTexto }}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Cargando -->
+  <div *ngIf="cargando" class="loading">
+    <div class="spinner"></div>
+    <p>{{ 'reader.loading' | translate }}</p>
+  </div>
+
+  <!-- Componente de Capítulo (Scrolleable) -->
+  <app-capitulo
+    *ngIf="!cargando"
+    [numeroCapitulo]="numeroCapitulo"
+    [volumen]="volumen">
+  </app-capitulo>
+
+  <!-- Footer de Navegación -->
+  <footer class="lector-footer" *ngIf="!cargando && progreso >= 90">
+    <div class="navegacion-capitulos">
+      <button
+        *ngIf="hayAnterior"
+        (click)="capituloAnterior()"
+        class="nav-btn prev">
+        {{ 'reader.previous' | translate }}
+      </button>
+
+      <button
+        (click)="volverAlIndice()"
+        class="nav-btn indice">
+        {{ 'reader.all_chapters' | translate }}
+      </button>
+
+      <button
+        *ngIf="haySiguiente"
+        (click)="capituloSiguiente()"
+        class="nav-btn next">
+        {{ 'reader.next' | translate }}
+      </button>
+    </div>
+
+    <div class="social-section">
+      <p>{{ 'reader.liked_chapter' | translate }}</p>
+      <div class="social-links">
+        <a href="https://ko-fi.com/trendingghost" target="_blank" class="social-link">
+          {{ 'reader.kofi' | translate }}
+        </a>
+        <a href="https://twitter.com/trendingghost" target="_blank" class="social-link">
+          {{ 'reader.twitter' | translate }}
+        </a>
+      </div>
+    </div>
+  </footer>
+
+</section>

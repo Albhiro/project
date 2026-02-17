@@ -1,0 +1,313 @@
+<section class="terminos-page">
+  <div class="container">
+    <article class="documento-legal">
+      <div class="doc-header">
+        <div class="doc-stamp stamp-terminos">{{ 'terms.stamp' | translate }}</div>
+        <h1>{{ 'terms.title' | translate }}</h1>
+        <div class="doc-subtitle">{{ 'terms.subtitle' | translate:{ year: currentYear } }}</div>
+      </div>
+
+      <!-- RESUMEN EJECUTIVO -->
+      <section class="seccion-destacada">
+        <div class="resumen-box">
+          <h2>{{ 'terms.summary_title' | translate }}</h2>
+          <div class="resumen-simple">
+            <p class="resumen-lead">
+              <strong>{{ 'terms.summary_basically' | translate }}</strong> {{ 'terms.summary_text' | translate }}
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ACEPTACIÓN DE TÉRMINOS -->
+      <section class="seccion-legal">
+        <h2 class="seccion-titulo">{{ 'terms.acceptance_title' | translate }}</h2>
+
+        <div class="termino-item">
+          <p [innerHTML]="'terms.acceptance_p1' | translate"></p>
+          <p>
+            {{ 'terms.acceptance_p2' | translate }}
+          </p>
+        </div>
+      </section>
+
+      <!-- ACCESO AL SITIO -->
+      <section class="seccion-legal">
+        <h2 class="seccion-titulo">{{ 'terms.access_title' | translate }}</h2>
+
+        <div class="termino-item permiso">
+          <div class="termino-icon">✅</div>
+          <div class="termino-contenido">
+            <h3>{{ 'terms.access_free_title' | translate }}</h3>
+            <p [innerHTML]="'terms.access_free_desc' | translate"></p>
+            <ul class="lista-legal">
+              <li><strong>{{ 'terms.access_free_1_label' | translate }}</strong> {{ 'terms.access_free_1_desc' | translate }}</li>
+              <li><strong>{{ 'terms.access_free_2_label' | translate }}</strong> {{ 'terms.access_free_2_desc' | translate }}</li>
+              <li><strong>{{ 'terms.access_free_3_label' | translate }}</strong> {{ 'terms.access_free_3_desc' | translate }}</li>
+              <li><strong>{{ 'terms.access_free_4_label' | translate }}</strong> {{ 'terms.access_free_4_desc' | translate }}</li>
+              <li><strong>{{ 'terms.access_free_5_label' | translate }}</strong> {{ 'terms.access_free_5_desc' | translate }}</li>
+            </ul>
+            <div class="compromiso-box">
+              <strong>{{ 'terms.access_free_commitment_label' | translate }}</strong> {{ 'terms.access_free_commitment_text' | translate }}
+            </div>
+          </div>
+        </div>
+
+        <div class="termino-item advertencia">
+          <div class="termino-icon">⚠️</div>
+          <div class="termino-contenido">
+            <h3>{{ 'terms.access_availability_title' | translate }}</h3>
+            <p>
+              {{ 'terms.access_availability_desc' | translate }}
+            </p>
+            <ul class="lista-legal">
+              <li><strong>{{ 'terms.access_availability_1_label' | translate }}</strong> {{ 'terms.access_availability_1_desc' | translate }}</li>
+              <li><strong>{{ 'terms.access_availability_2_label' | translate }}</strong> {{ 'terms.access_availability_2_desc' | translate }}</li>
+              <li><strong>{{ 'terms.access_availability_3_label' | translate }}</strong> {{ 'terms.access_availability_3_desc' | translate }}</li>
+              <li><strong>{{ 'terms.access_availability_4_label' | translate }}</strong> {{ 'terms.access_availability_4_desc' | translate }}</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- USO PERMITIDO -->
+      <section class="seccion-legal">
+        <h2 class="seccion-titulo">{{ 'terms.allowed_title' | translate }}</h2>
+
+        <div class="uso-grid">
+          <div class="uso-item permitido">
+            <strong>{{ 'terms.allowed_1_label' | translate }}</strong>
+            <p>{{ 'terms.allowed_1_desc' | translate }}</p>
+          </div>
+          <div class="uso-item permitido">
+            <strong>{{ 'terms.allowed_2_label' | translate }}</strong>
+            <p>{{ 'terms.allowed_2_desc' | translate }}</p>
+          </div>
+          <div class="uso-item permitido">
+            <strong>{{ 'terms.allowed_3_label' | translate }}</strong>
+            <p>{{ 'terms.allowed_3_desc' | translate }}</p>
+          </div>
+          <div class="uso-item permitido">
+            <strong>{{ 'terms.allowed_4_label' | translate }}</strong>
+            <p>{{ 'terms.allowed_4_desc' | translate }}</p>
+          </div>
+          <div class="uso-item permitido">
+            <strong>{{ 'terms.allowed_5_label' | translate }}</strong>
+            <p>{{ 'terms.allowed_5_desc' | translate }}</p>
+          </div>
+          <div class="uso-item permitido">
+            <strong>{{ 'terms.allowed_6_label' | translate }}</strong>
+            <p>{{ 'terms.allowed_6_desc' | translate }}</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- USO PROHIBIDO -->
+      <section class="seccion-legal">
+        <h2 class="seccion-titulo">{{ 'terms.prohibited_title' | translate }}</h2>
+
+        <div class="prohibicion-item">
+          <div class="prohibicion-icon">❌</div>
+          <div class="prohibicion-contenido">
+            <h3>{{ 'terms.prohibited_scraping_title' | translate }}</h3>
+            <p [innerHTML]="'terms.prohibited_scraping_desc' | translate"></p>
+            <ul class="lista-legal">
+              <li><strong>{{ 'terms.prohibited_scraping_1_label' | translate }}</strong> {{ 'terms.prohibited_scraping_1_desc' | translate }}</li>
+              <li><strong>{{ 'terms.prohibited_scraping_2_label' | translate }}</strong> {{ 'terms.prohibited_scraping_2_desc' | translate }}</li>
+              <li><strong>{{ 'terms.prohibited_scraping_3_label' | translate }}</strong> {{ 'terms.prohibited_scraping_3_desc' | translate }}</li>
+              <li><strong>{{ 'terms.prohibited_scraping_4_label' | translate }}</strong> {{ 'terms.prohibited_scraping_4_desc' | translate }}</li>
+            </ul>
+            <div class="nota-tecnica" [innerHTML]="'terms.prohibited_scraping_note_text' | translate"></div>
+          </div>
+        </div>
+
+        <div class="prohibicion-item">
+          <div class="prohibicion-icon">❌</div>
+          <div class="prohibicion-contenido">
+            <h3>{{ 'terms.prohibited_redistribution_title' | translate }}</h3>
+            <p>
+              {{ 'terms.prohibited_redistribution_desc' | translate }}
+            </p>
+            <ul class="lista-legal">
+              <li><strong>{{ 'terms.prohibited_redistribution_1_label' | translate }}</strong> {{ 'terms.prohibited_redistribution_1_desc' | translate }}</li>
+              <li><strong>{{ 'terms.prohibited_redistribution_2_label' | translate }}</strong> {{ 'terms.prohibited_redistribution_2_desc' | translate }}</li>
+              <li><strong>{{ 'terms.prohibited_redistribution_3_label' | translate }}</strong> {{ 'terms.prohibited_redistribution_3_desc' | translate }}</li>
+              <li><strong>{{ 'terms.prohibited_redistribution_4_label' | translate }}</strong> {{ 'terms.prohibited_redistribution_4_desc' | translate }}</li>
+            </ul>
+            <div class="excepcion-box">
+              <strong>{{ 'terms.prohibited_redistribution_exception_label' | translate }}</strong> {{ 'terms.prohibited_redistribution_exception_text' | translate }}
+            </div>
+          </div>
+        </div>
+
+        <div class="prohibicion-item">
+          <div class="prohibicion-icon">❌</div>
+          <div class="prohibicion-contenido">
+            <h3>{{ 'terms.prohibited_modification_title' | translate }}</h3>
+            <ul class="lista-legal">
+              <li><strong>{{ 'terms.prohibited_modification_1_label' | translate }}</strong> {{ 'terms.prohibited_modification_1_desc' | translate }}</li>
+              <li><strong>{{ 'terms.prohibited_modification_2_label' | translate }}</strong> {{ 'terms.prohibited_modification_2_desc' | translate }}</li>
+              <li><strong>{{ 'terms.prohibited_modification_3_label' | translate }}</strong> {{ 'terms.prohibited_modification_3_desc' | translate }}</li>
+              <li><strong>{{ 'terms.prohibited_modification_4_label' | translate }}</strong> {{ 'terms.prohibited_modification_4_desc' | translate }}</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="prohibicion-item">
+          <div class="prohibicion-icon">❌</div>
+          <div class="prohibicion-contenido">
+            <h3>{{ 'terms.prohibited_malicious_title' | translate }}</h3>
+            <ul class="lista-legal">
+              <li><strong>{{ 'terms.prohibited_malicious_1_label' | translate }}</strong> {{ 'terms.prohibited_malicious_1_desc' | translate }}</li>
+              <li><strong>{{ 'terms.prohibited_malicious_2_label' | translate }}</strong> {{ 'terms.prohibited_malicious_2_desc' | translate }}</li>
+              <li><strong>{{ 'terms.prohibited_malicious_3_label' | translate }}</strong> {{ 'terms.prohibited_malicious_3_desc' | translate }}</li>
+              <li><strong>{{ 'terms.prohibited_malicious_4_label' | translate }}</strong> {{ 'terms.prohibited_malicious_4_desc' | translate }}</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- CONTENIDO GENERADO POR USUARIOS -->
+      <section class="seccion-legal">
+        <h2 class="seccion-titulo">{{ 'terms.ugc_title' | translate }}</h2>
+
+        <div class="ugc-box">
+          <h3>{{ 'terms.ugc_no_comments' | translate }}</h3>
+          <p>
+            {{ 'terms.ugc_no_comments_desc' | translate }}
+          </p>
+          <ul class="lista-legal">
+            <li><strong>{{ 'terms.ugc_reason_1_label' | translate }}</strong> {{ 'terms.ugc_reason_1_desc' | translate }}</li>
+            <li><strong>{{ 'terms.ugc_reason_2_label' | translate }}</strong> {{ 'terms.ugc_reason_2_desc' | translate }}</li>
+            <li><strong>{{ 'terms.ugc_reason_3_label' | translate }}</strong> {{ 'terms.ugc_reason_3_desc' | translate }}</li>
+          </ul>
+
+          <div class="alternativas-box">
+            <h4>{{ 'terms.ugc_alternatives_title' | translate }}</h4>
+            <ul>
+              <li><strong>{{ 'terms.ugc_alternatives_1_label' | translate }}</strong> {{ 'terms.ugc_alternatives_1_desc' | translate }}</li>
+              <li><strong>{{ 'terms.ugc_alternatives_2_label' | translate }}</strong> {{ 'terms.ugc_alternatives_2_desc' | translate }}</li>
+              <li><strong>{{ 'terms.ugc_alternatives_3_label' | translate }}</strong> {{ 'terms.ugc_alternatives_3_desc' | translate }}</li>
+            </ul>
+            <p class="nota-small">
+              {{ 'terms.ugc_alternatives_note' | translate }}
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- PROPIEDAD INTELECTUAL -->
+      <section class="seccion-legal">
+        <h2 class="seccion-titulo">{{ 'terms.ip_title' | translate }}</h2>
+
+        <div class="ip-box">
+          <p>
+            {{ 'terms.ip_desc' | translate }}
+          </p>
+          <ul class="lista-legal">
+            <li><strong>{{ 'terms.ip_1_label' | translate }}</strong> {{ 'terms.ip_1_desc' | translate }}</li>
+            <li><strong>{{ 'terms.ip_2_label' | translate }}</strong> {{ 'terms.ip_2_desc' | translate }}</li>
+            <li><strong>{{ 'terms.ip_3_label' | translate }}</strong> {{ 'terms.ip_3_desc' | translate }}</li>
+          </ul>
+
+          <p class="ip-nota" [innerHTML]="'terms.ip_note' | translate"></p>
+        </div>
+      </section>
+
+      <!-- DISCLAIMERS -->
+      <section class="seccion-legal">
+        <h2 class="seccion-titulo">{{ 'terms.disclaimers_title' | translate }}</h2>
+
+        <div class="disclaimer-item">
+          <h3>{{ 'terms.disclaimer_asis_title' | translate }}</h3>
+          <p [innerHTML]="'terms.disclaimer_asis_desc' | translate"></p>
+          <ul class="lista-legal">
+            <li><strong>{{ 'terms.disclaimer_asis_1_label' | translate }}</strong> {{ 'terms.disclaimer_asis_1_desc' | translate }}</li>
+            <li><strong>{{ 'terms.disclaimer_asis_2_label' | translate }}</strong> {{ 'terms.disclaimer_asis_2_desc' | translate }}</li>
+            <li><strong>{{ 'terms.disclaimer_asis_3_label' | translate }}</strong> {{ 'terms.disclaimer_asis_3_desc' | translate }}</li>
+          </ul>
+        </div>
+
+        <div class="disclaimer-item">
+          <h3>{{ 'terms.disclaimer_mature_title' | translate }}</h3>
+          <p>
+            {{ 'terms.disclaimer_mature_desc' | translate }}
+          </p>
+          <ul class="lista-legal">
+            <li><strong>{{ 'terms.disclaimer_mature_1_label' | translate }}</strong> {{ 'terms.disclaimer_mature_1_desc' | translate }}</li>
+            <li><strong>{{ 'terms.disclaimer_mature_2_label' | translate }}</strong> {{ 'terms.disclaimer_mature_2_desc' | translate }}</li>
+            <li><strong>{{ 'terms.disclaimer_mature_3_label' | translate }}</strong> {{ 'terms.disclaimer_mature_3_desc' | translate }}</li>
+          </ul>
+          <p class="disclaimer-nota">
+            <strong>{{ 'terms.disclaimer_mature_note_label' | translate }}</strong> {{ 'terms.disclaimer_mature_note_text' | translate }}
+          </p>
+        </div>
+
+        <div class="disclaimer-item">
+          <h3>{{ 'terms.disclaimer_links_title' | translate }}</h3>
+          <p>
+            {{ 'terms.disclaimer_links_desc' | translate }}
+          </p>
+          <ul class="lista-legal">
+            <li><strong>{{ 'terms.disclaimer_links_1_label' | translate }}</strong> {{ 'terms.disclaimer_links_1_desc' | translate }}</li>
+            <li><strong>{{ 'terms.disclaimer_links_2_label' | translate }}</strong> {{ 'terms.disclaimer_links_2_desc' | translate }}</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- MODIFICACIONES -->
+      <section class="seccion-legal">
+        <h2 class="seccion-titulo">{{ 'terms.modifications_title' | translate }}</h2>
+
+        <div class="modificaciones-box">
+          <p>
+            {{ 'terms.modifications_desc' | translate }}
+          </p>
+          <ul class="lista-legal">
+            <li><strong>{{ 'terms.modifications_1_label' | translate }}</strong> {{ 'terms.modifications_1_desc' | translate }}</li>
+            <li><strong>{{ 'terms.modifications_2_label' | translate }}</strong> {{ 'terms.modifications_2_desc' | translate }}</li>
+            <li><strong>{{ 'terms.modifications_3_label' | translate }}</strong> {{ 'terms.modifications_3_desc' | translate }}</li>
+          </ul>
+
+          <div class="compromiso-box">
+            <strong>{{ 'terms.modifications_commitment_label' | translate }}</strong> {{ 'terms.modifications_commitment_text' | translate }}
+          </div>
+        </div>
+      </section>
+
+      <!-- CONTACTO -->
+      <section class="seccion-legal">
+        <h2 class="seccion-titulo">{{ 'terms.contact_title' | translate }}</h2>
+
+        <div class="contacto-legal">
+          <p>
+            {{ 'terms.contact_desc' | translate }}
+          </p>
+          <ul class="lista-legal">
+            <li><strong>{{ 'terms.contact_1_label' | translate }}</strong> {{ 'terms.contact_1_desc' | translate }}</li>
+            <li><strong>{{ 'terms.contact_2_label' | translate }}</strong> {{ 'terms.contact_2_desc' | translate }}</li>
+          </ul>
+          <p class="contacto-nota">
+            <strong>{{ 'terms.contact_note_label' | translate }}</strong> {{ 'terms.contact_note_text' | translate }}
+          </p>
+        </div>
+      </section>
+
+      <!-- FOOTER LEGAL -->
+      <div class="legal-footer">
+        <p class="footer-disclaimer">
+          {{ 'terms.footer_disclaimer' | translate }}
+        </p>
+        <div class="footer-hash">
+          <code>{{ 'terms.footer_hash' | translate }}</code>
+        </div>
+      </div>
+
+      <div class="nav-footer">
+        <a routerLink="/sobre" class="btn-back">{{ 'terms.back_button' | translate }}</a>
+      </div>
+    </article>
+  </div>
+</section>
+
+<app-scroll-to-top />

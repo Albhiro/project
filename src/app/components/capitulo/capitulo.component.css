@@ -1,0 +1,229 @@
+/* ==========================================
+   COMPONENTE CAPITULO - TRENDING GHOST
+   Contenido scrolleable independiente
+   ========================================== */
+
+.capitulo-wrapper {
+  min-height: 100vh;
+  max-height: 100vh; /* Altura fija para que funcione el scroll */
+  overflow-y: auto;
+  overflow-x: hidden;
+  background: var(--black);
+  color: var(--white);
+  scroll-behavior: smooth;
+  box-sizing: border-box;
+}
+
+/* Scrollbar del capítulo */
+.capitulo-wrapper::-webkit-scrollbar {
+  width: 11px;
+}
+
+.capitulo-wrapper::-webkit-scrollbar-button {
+  display: none;
+  height: 0;
+  width: 0;
+}
+
+.capitulo-wrapper::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.5);
+  border-left: 1px solid rgba(0, 255, 255, 0.1);
+}
+
+.capitulo-wrapper::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg,
+    rgba(0, 255, 255, 0.3) 0%,
+    rgba(255, 0, 255, 0.5) 50%,
+    rgba(0, 255, 255, 0.3) 100%
+  );
+  border-radius: 5px;
+}
+
+.capitulo-wrapper::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg,
+    var(--cyan) 0%,
+    var(--magenta) 50%,
+    var(--cyan) 100%
+  );
+  box-shadow: 0 0 15px var(--cyan);
+}
+
+/* Animación de scroll activo */
+.capitulo-wrapper.auto-scrolling::-webkit-scrollbar-thumb {
+  animation: scrollbar-pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes scrollbar-pulse {
+  0%, 100% {
+    box-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 25px rgba(255, 0, 255, 0.6);
+  }
+}
+
+/* ==========================================
+   CONTENIDO DEL CAPÍTULO
+   ========================================== */
+
+.capitulo-contenido {
+  max-width: 80%; /* 80% del ancho, 10% a cada lado */
+  margin: 0 auto;
+  padding: 2rem 2rem; /* Reducido de 3rem */
+}
+
+/* Header del capítulo */
+.capitulo-header {
+  margin-bottom: 2rem; /* Reducido de 3rem */
+  text-align: center;
+  border-bottom: 2px solid rgba(0, 255, 255, 0.3);
+  padding-bottom: 1.5rem; /* Reducido de 2rem */
+}
+
+.capitulo-meta {
+  font-family: 'Courier New', monospace;
+  font-size: 0.9rem;
+  color: var(--cyan);
+  margin-bottom: 1rem;
+  letter-spacing: 2px;
+}
+
+.capitulo-meta .separador {
+  margin: 0 0.5rem;
+  color: var(--magenta);
+}
+
+.capitulo-titulo {
+  font-size: 3rem;
+  font-weight: 900;
+  margin: 1rem 0;
+  color: var(--white);
+  text-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+  line-height: 1.2;
+}
+
+.capitulo-info {
+  font-size: 0.95rem;
+  color: var(--gray);
+  margin-top: 1rem;
+}
+
+.capitulo-info .separador {
+  margin: 0 0.75rem;
+  opacity: 0.5;
+}
+
+/* Texto del capítulo */
+.capitulo-texto {
+  font-size: 1.1rem;
+  line-height: 1.8;
+  color: var(--white);
+}
+
+.capitulo-texto h1 {
+  font-size: 2.5rem;
+  margin: 2.5rem 0 1.5rem 0;
+  color: var(--cyan);
+  font-weight: 800;
+}
+
+.capitulo-texto h2 {
+  font-size: 2rem;
+  margin: 2rem 0 1rem 0;
+  color: var(--magenta);
+  font-weight: 700;
+}
+
+.capitulo-texto h3 {
+  font-size: 1.5rem;
+  margin: 1.5rem 0 0.75rem 0;
+  color: var(--cyan);
+  font-weight: 600;
+}
+
+.capitulo-texto p {
+  margin: 1.2rem 0;
+  text-align: justify;
+}
+
+.capitulo-texto strong {
+  color: var(--cyan);
+  font-weight: 700;
+}
+
+.capitulo-texto em {
+  color: var(--magenta);
+  font-style: italic;
+}
+
+.capitulo-texto hr {
+  border: none;
+  border-top: 1px solid rgba(0, 255, 255, 0.3);
+  margin: 3rem 0;
+}
+
+.capitulo-texto pre {
+  background: rgba(0, 255, 255, 0.05);
+  border: 1px solid rgba(0, 255, 255, 0.3);
+  border-left: 4px solid var(--cyan);
+  padding: 1.5rem;
+  margin: 2rem 0;
+  border-radius: 8px;
+  overflow-x: auto;
+  font-family: 'Courier New', monospace;
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.capitulo-texto code {
+  background: rgba(0, 255, 255, 0.1);
+  color: var(--cyan);
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  font-family: 'Courier New', monospace;
+  font-size: 0.95em;
+}
+
+/* Capítulo no encontrado */
+.capitulo-no-encontrado {
+  text-align: center;
+  padding: 5rem 2rem;
+}
+
+.capitulo-no-encontrado h2 {
+  font-size: 2.5rem;
+  color: var(--magenta);
+  margin-bottom: 1rem;
+}
+
+.capitulo-no-encontrado p {
+  font-size: 1.2rem;
+  color: var(--gray);
+}
+
+/* ==========================================
+   RESPONSIVE
+   ========================================== */
+
+@media (max-width: 768px) {
+  .capitulo-contenido {
+    max-width: 90%; /* Más ancho en móvil */
+    padding: 1.5rem 1rem;
+  }
+
+  .capitulo-titulo {
+    font-size: 2rem;
+  }
+
+  .capitulo-texto {
+    font-size: 1rem;
+  }
+
+  .capitulo-texto h1 {
+    font-size: 1.8rem;
+  }
+
+  .capitulo-texto h2 {
+    font-size: 1.5rem;
+  }
+}

@@ -1,0 +1,304 @@
+<div class="contacto-page" [class.glitch-active]="error">
+  <div class="container">
+    <!-- Header con efecto scanline -->
+    <div class="page-header">
+      <h1 class="glitch-text" [attr.data-text]="'contact.title' | translate">
+        {{ 'contact.title' | translate }}
+      </h1>
+      <p class="subtitle cyber-text">{{ 'contact.subtitle' | translate }}</p>
+      
+      <!-- Estado de conexión -->
+      <div class="connection-status" [class.active]="!isSubmitting">
+        <span class="status-dot"></span>
+        <span class="status-text">
+          {{ isSubmitting ? 'TRANSMITIENDO...' : 'CANAL_ACTIVO' }}
+        </span>
+      </div>
+    </div>
+
+    <!-- Formulario -->
+    <div class="contact-form-container" *ngIf="!submitted">
+      <div class="form-wrapper">
+        <!-- Barra de progreso de validación -->
+        <div class="validation-bar">
+          <div class="validation-progress" [style.width.%]="getFormCompletionPercentage()"></div>
+        </div>
+
+        <form class="contact-form" (ngSubmit)="onSubmit()" #contactForm="ngForm" novalidate>
+          
+          <!-- Nombre -->
+          <div class="form-group" [class.has-error]="hasFieldError('name')" [class.valid]="isFieldValid('name')">
+            <label for="name">
+              <span class="label-icon">👤</span>
+              {{ 'contact.form.name' | translate }}
+              <span class="required">*</span>
+            </label>
+            <input
+              type="text"
+              id="name"
+              name="name"
+              [(ngModel)]="formData.name"
+              (input)="validateField('name')"
+              (blur)="onFieldBlur('name')"
+              required
+              minlength="2"
+              maxlength="100"
+              [placeholder]="'contact.form.name_placeholder' | translate"
+              [class.error]="hasFieldError('name')"
+              [class.valid]="isFieldValid('name')">
+            <div class="field-validation" *ngIf="touchedFields['name']">
+              <span class="error-message" *ngIf="getFieldError('name')">
+                {{ (getFieldError('name') || '') | translate }}
+              </span>
+              <span class="valid-message" *ngIf="isFieldValid('name')">
+                ✓ VÁLIDO
+              </span>
+            </div>
+          </div>
+
+          <!-- Email -->
+          <div class="form-group" [class.has-error]="hasFieldError('email')" [class.valid]="isFieldValid('email')">
+            <label for="email">
+              <span class="label-icon">📧</span>
+              {{ 'contact.form.email' | translate }}
+              <span class="required">*</span>
+            </label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              [(ngModel)]="formData.email"
+              (input)="validateField('email')"
+              (blur)="onFieldBlur('email')"
+              required
+              maxlength="100"
+              [placeholder]="'contact.form.email_placeholder' | translate"
+              [class.error]="hasFieldError('email')"
+              [class.valid]="isFieldValid('email')">
+            <div class="field-validation" *ngIf="touchedFields['email']">
+              <span class="error-message" *ngIf="getFieldError('email')">
+                {{ (getFieldError('email') || '') | translate }}
+              </span>
+              <span class="valid-message" *ngIf="isFieldValid('email')">
+                ✓ VÁLIDO
+              </span>
+            </div>
+          </div>
+
+          <!-- Categoría -->
+          <div class="form-group" [class.has-error]="hasFieldError('category')" [class.valid]="isFieldValid('category')">
+            <label for="category">
+              <span class="label-icon">🏷️</span>
+              {{ 'contact.form.category' | translate }}
+              <span class="required">*</span>
+            </label>
+            <select
+              id="category"
+              name="category"
+              [(ngModel)]="formData.category"
+              (change)="validateField('category')"
+              (blur)="onFieldBlur('category')"
+              required
+              [class.error]="hasFieldError('category')"
+              [class.valid]="isFieldValid('category')">
+              <option value="">{{ 'contact.form.category_select' | translate }}</option>
+              <option value="general">{{ 'contact.form.category_general' | translate }}</option>
+              <option value="bug">{{ 'contact.form.category_bug' | translate }}</option>
+              <option value="enhancement">{{ 'contact.form.category_suggestion' | translate }}</option>
+              <option value="translation">{{ 'contact.form.category_translation' | translate }}</option>
+              <option value="legal">{{ 'contact.form.category_legal' | translate }}</option>
+              <option value="collaboration">{{ 'contact.form.category_collaboration' | translate }}</option>
+            </select>
+            <div class="field-validation" *ngIf="touchedFields['category']">
+              <span class="error-message" *ngIf="getFieldError('category')">
+                {{ (getFieldError('category') || '') | translate }}
+              </span>
+            </div>
+          </div>
+
+          <!-- Asunto -->
+          <div class="form-group" [class.has-error]="getFieldError('subject')" [class.valid]="isFieldValid('subject')">
+            <label for="subject">
+              <span class="label-icon">📝</span>
+              {{ 'contact.form.subject' | translate }}
+              <span class="required">*</span>
+            </label>
+            <input
+              type="text"
+              id="subject"
+              name="subject"
+              [(ngModel)]="formData.subject"
+              (input)="validateField('subject')"
+              (blur)="onFieldBlur('subject')"
+              required
+              minlength="5"
+              maxlength="200"
+              [placeholder]="'contact.form.subject_placeholder' | translate"
+              [class.error]="getFieldError('subject')"
+              [class.valid]="isFieldValid('subject')">
+            <div class="field-validation" *ngIf="touchedFields['subject']">
+              <span class="error-message" *ngIf="getFieldError('subject')">
+                {{ (getFieldError('subject') || '') | translate }}
+              </span>
+              <span class="valid-message" *ngIf="isFieldValid('subject')">
+                ✓ VÁLIDO
+              </span>
+            </div>
+          </div>
+
+          <!-- Mensaje -->
+          <div class="form-group message-group" [class.has-error]="getFieldError('message')" [class.valid]="isFieldValid('message')">
+            <label for="message">
+              <span class="label-icon">💬</span>
+              {{ 'contact.form.message' | translate }}
+              <span class="required">*</span>
+            </label>
+            <textarea
+              id="message"
+              name="message"
+              [(ngModel)]="formData.message"
+              (input)="validateField('message')"
+              (blur)="onFieldBlur('message')"
+              required
+              rows="8"
+              minlength="20"
+              maxlength="2000"
+              [placeholder]="'contact.form.message_placeholder' | translate"
+              [class.error]="getFieldError('message')"
+              [class.valid]="isFieldValid('message')"></textarea>
+            
+            <!-- Contador de caracteres con warning visual -->
+            <div class="char-counter" [class.warning]="getCharWarningLevel() === 'warning'" [class.danger]="getCharWarningLevel() === 'danger'">
+              <span class="counter-text">{{ formData.message.length }} / 2000</span>
+              <div class="counter-bar">
+                <div class="counter-fill" [style.width.%]="(formData.message.length / 2000) * 100"></div>
+              </div>
+            </div>
+
+            <div class="field-validation" *ngIf="touchedFields['message']">
+              <span class="error-message" *ngIf="getFieldError('message')">
+                {{ (getFieldError('message') || '') | translate }}
+              </span>
+              <span class="valid-message" *ngIf="isFieldValid('message')">
+                ✓ VÁLIDO
+              </span>
+            </div>
+          </div>
+
+          <!-- Botón de envío -->
+          <button
+            type="submit"
+            class="submit-btn"
+            [disabled]="!isFormValid() || isSubmitting"
+            [class.submitting]="isSubmitting">
+            <span class="btn-icon" *ngIf="!isSubmitting">⚡</span>
+            <span class="btn-icon spinner" *ngIf="isSubmitting">⟳</span>
+            <span *ngIf="!isSubmitting">{{ 'contact.form.submit' | translate }}</span>
+            <span *ngIf="isSubmitting">{{ 'contact.form.submitting' | translate }}</span>
+          </button>
+        </form>
+
+        <!-- Nota de privacidad -->
+        <div class="privacy-note">
+          <span class="privacy-icon">🔒</span>
+          <p>{{ 'contact.form.privacy_note' | translate }}</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal de éxito con overlay -->
+    <div class="success-modal-overlay" *ngIf="submitted && !error" (click)="closeModal()">
+      <div class="success-modal" (click)="$event.stopPropagation()">
+        <button class="close-modal-btn" (click)="closeModal()" aria-label="Cerrar">×</button>
+        
+        <div class="success-animation">
+          <div class="success-icon">✅</div>
+          <div class="success-pulse"></div>
+        </div>
+        
+        <h2 class="cyber-text">{{ 'contact.form.success_title' | translate }}</h2>
+        <p class="success-subtitle">{{ 'contact.form.success_message' | translate }}</p>
+        
+        <!-- Detalles de la transmisión -->
+        <div class="transmission-details">
+          <h3 class="details-title">{{ 'contact.form.transmission_details' | translate }}</h3>
+          
+          <div class="details-grid">
+            <div class="detail-item">
+              <span class="detail-label">{{ 'contact.form.issue_id' | translate }}</span>
+              <span class="detail-value issue-id">#{{ issueNumber }}</span>
+            </div>
+            
+            <div class="detail-item">
+              <span class="detail-label">{{ 'contact.form.timestamp' | translate }}</span>
+              <span class="detail-value">{{ getFormattedDate() }}</span>
+            </div>
+            
+            <div class="detail-item">
+              <span class="detail-label">{{ 'contact.form.category_label' | translate }}</span>
+              <span class="detail-value">{{ 'contact.form.category_' + formData.category | translate }}</span>
+            </div>
+            
+            <div class="detail-item">
+              <span class="detail-label">{{ 'contact.form.response_email' | translate }}</span>
+              <span class="detail-value email-value">{{ formData.email }}</span>
+            </div>
+          </div>
+
+          <!-- Información importante inline -->
+          <div class="important-info-inline">
+            <span class="info-icon">💡</span>
+            <span class="info-text">{{ 'contact.form.important_message' | translate }}</span>
+          </div>
+        </div>
+
+        <!-- Botones de acción -->
+        <div class="action-buttons">
+          <button class="copy-btn" (click)="copySubmissionDetails()" [class.copied]="copied">
+            <span class="btn-icon" *ngIf="!copied">📋</span>
+            <span class="btn-icon" *ngIf="copied">✅</span>
+            <span *ngIf="!copied">{{ 'contact.form.copy_details' | translate }}</span>
+            <span *ngIf="copied">{{ 'contact.form.copied' | translate }}</span>
+          </button>
+          
+          <button class="back-btn" (click)="resetForm()">
+            <span class="btn-icon">←</span>
+            {{ 'contact.form.send_another' | translate }}
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mensaje de error con efecto glitch -->
+    <div class="error-message glitch-box" *ngIf="error">
+      <div class="error-icon">❌</div>
+      <h2 class="glitch-text" [attr.data-text]="'contact.form.error_title' | translate">
+        {{ 'contact.form.error_title' | translate }}
+      </h2>
+      <p class="error-details">{{ errorMessage | translate }}</p>
+      
+      <button class="back-btn error-btn" (click)="resetForm()">
+        {{ 'contact.form.try_again' | translate }}
+      </button>
+    </div>
+
+    <!-- Enlaces rápidos -->
+    <div class="quick-links" *ngIf="!submitted">
+      <h3>{{ 'contact.quick_links_title' | translate }}</h3>
+      <div class="links-grid">
+        <a href="https://ko-fi.com/trendingghostofficial" target="_blank" rel="noopener" class="quick-link">
+          <span class="link-icon">☕</span>
+          <span>{{ 'contact.kofi_title' | translate }}</span>
+        </a>
+        <a href="/feed.xml" class="quick-link">
+          <span class="link-icon">📡</span>
+          <span>{{ 'contact.rss_title' | translate }}</span>
+        </a>
+        <a href="https://github.com/trendingghostofficial/building" target="_blank" rel="noopener" class="quick-link">
+          <span class="link-icon">⚙️</span>
+          <span>GitHub</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
